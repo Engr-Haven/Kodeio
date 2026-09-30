@@ -100,7 +100,7 @@ export default function FAQ() {
                     setOpenIndex(-1);
                   }}
                   id={`faq-tab-${tab.id}`}
-                  className={`cursor-pointer rounded-full px-[1.4rem] py-[0.45rem] text-[0.8125rem] font-semibold transition-all duration-200 ${
+                  className={`min-h-11 cursor-pointer rounded-full px-[1.4rem] py-[0.45rem] text-[0.8125rem] font-semibold transition-all duration-200 ${
                     activeTab === tab.id
                       ? 'bg-brand text-white shadow-[0_2px_6px_rgba(125,46,255,0.25)]'
                       : 'text-[#4b5563]'
@@ -154,7 +154,7 @@ export default function FAQ() {
           <a
             href="#contact"
             id="btn-faq-start-project"
-            className="inline-flex items-center gap-1.5 rounded-lg bg-brand px-[1.6rem] py-[0.65rem] text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-brand-dark"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-brand px-[1.6rem] py-[0.65rem] text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-brand-dark"
           >
             Start a Project
             <ArrowRight size={14} strokeWidth={2} />

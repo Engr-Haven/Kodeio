@@ -109,7 +109,7 @@ export default function Bootcamps() {
                 </span>
                 <a
                   href="#contact"
-                  className={`inline-flex items-center justify-center rounded-lg px-5 py-[0.55rem] text-[0.8125rem] font-semibold transition-all duration-200 ${
+                  className={`inline-flex min-h-11 items-center justify-center rounded-lg px-5 py-[0.55rem] text-[0.8125rem] font-semibold transition-all duration-200 ${
                     course.btnVariant === 'primary'
                       ? 'bg-brand text-white hover:bg-brand-dark'
                       : 'cursor-default bg-[#d1d5db] text-[#4b5563]'

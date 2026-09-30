@@ -94,7 +94,7 @@ export default function Navbar() {
           id="nav-hamburger"
           aria-label="Toggle navigation menu"
           aria-expanded={menuOpen}
-          className="flex cursor-pointer flex-col justify-center gap-[5px] rounded-chip p-1.5 lg:hidden"
+          className="flex h-11 w-11 cursor-pointer flex-col items-center justify-center gap-[5px] rounded-chip lg:hidden"
         >
           <span
             className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${
@@ -114,11 +114,17 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile dropdown menu */}
+      {/* Mobile dropdown menu.
+          Padding and the top border must be toggled WITH the max-height:
+          `max-h-0` only clamps the content box, so fixed pt-4/pb-6 and the
+          1px border kept the closed panel 41px tall — which left the first
+          link ("services") painted and hit-testable on top of the hero. */}
       <div
         id="nav-mobile-menu"
-        className={`flex flex-col gap-1.5 overflow-hidden border-t border-line bg-white px-6 pt-4 pb-6 transition-[max-height] duration-400 lg:hidden ${
-          menuOpen ? 'max-h-[400px]' : 'max-h-0'
+        className={`flex flex-col gap-1.5 overflow-hidden bg-white px-6 transition-all duration-400 lg:hidden ${
+          menuOpen
+            ? 'max-h-[400px] border-t border-line pt-4 pb-6'
+            : 'max-h-0 border-t-0 pt-0 pb-0'
         }`}
       >
         {navLinks.map((link) => (
@@ -134,7 +140,7 @@ export default function Navbar() {
         <a
           href="#contact"
           onClick={(e) => handleNavClick(e, '#contact')}
-          className="btn btn-primary mt-1"
+          className="btn btn-primary mt-1 w-full min-h-11 py-[0.7rem]"
         >
           start a project
         </a>

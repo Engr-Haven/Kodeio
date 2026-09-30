@@ -100,7 +100,10 @@ export default function Hero() {
       <div className="shell flex w-full flex-col items-center text-center">
         {/* ── Top announcement badge pill ───────── */}
         <div className="mb-6 flex justify-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-line bg-white px-[1.1rem] py-[0.4rem] text-[0.8125rem] font-medium text-gray-700 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+          {/* Wraps to two lines at ~320px. A large fixed radius is used rather
+              than rounded-full, which distorted into an odd lozenge once the
+              content stacked. */}
+          <div className="inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 rounded-[1.6rem] border border-line bg-white px-4 py-[0.4rem] text-[0.8125rem] font-medium text-gray-700 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
             <span>Book a call</span>
             <span className="text-[0.75rem] font-light text-muted">&gt;</span>
             <span>Finish project</span>
@@ -145,25 +148,33 @@ export default function Hero() {
             mockupsVisible ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          {/* key remounts the grid on each entry so the bounce replays */}
+          {/* The 3-column collage (stack | phone | stack) is kept at every
+              width rather than collapsing to a single column — below lg the
+              centre track and the gaps shrink proportionally, so the
+              composition reads the same as on desktop, just smaller. */}
           <div
             key={bounceTick}
-            className="grid w-full grid-cols-[1fr_300px_1fr] items-center gap-6 max-[960px]:mx-auto max-[960px]:max-w-[420px] max-[960px]:grid-cols-1"
+            className="grid w-full grid-cols-[1fr_0.7fr_1fr] items-center gap-2 sm:gap-4 lg:grid-cols-[1fr_300px_1fr] lg:gap-6"
           >
             {/* ── Left column ──────────────────── */}
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2 sm:gap-5">
               {figure(mockups.pcTopLeft, bounce(0), 'left')}
               {figure(mockups.pcBottomLeft, bounce(90), 'left')}
             </div>
 
             {/* ── Center: phone ────────────────── */}
             <div className="flex items-center justify-center">
-              {/* capped so it doesn't dominate the single-column mobile stack */}
-              {figure(mockups.phone, bouncePhone, 'phone', 'mx-auto w-full max-w-[280px]')}
+              {/* capped so it can't dominate the narrow tracks on phones */}
+              {figure(
+                mockups.phone,
+                bouncePhone,
+                'phone',
+                'mx-auto w-full max-w-[110px] sm:max-w-[170px] lg:max-w-[280px]'
+              )}
             </div>
 
             {/* ── Right column ─────────────────── */}
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-2 sm:gap-5">
               {figure(mockups.pcTopRight, bounce(270), 'right')}
               {figure(mockups.dashboard, bounce(360), 'right')}
             </div>

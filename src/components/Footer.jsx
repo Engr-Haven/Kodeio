@@ -113,7 +113,7 @@ export default function Footer() {
                   target="_blank"
                   rel="noreferrer"
                   aria-label={label}
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/15 text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/30"
+                  className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/15 text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/30"
                 >
                   {brandIcons[label]}
                 </a>
@@ -152,13 +152,15 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mb-4 flex items-center justify-between border-t border-white/15 pt-6 text-xs text-[#e9d5ff]">
+        {/* Wraps: at <=430px the copyright and the two links cannot share a
+            line, and without flex-wrap they crushed into four ragged lines. */}
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-white/15 pt-6 text-xs text-[#e9d5ff]">
           <p>© 2026 Kodeio. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#privacy" className="text-[#e9d5ff] transition-colors duration-200 hover:text-white">
+            <a href="#privacy" className="py-1 text-[#e9d5ff] transition-colors duration-200 hover:text-white">
               Privacy Policy
             </a>
-            <a href="#terms" className="text-[#e9d5ff] transition-colors duration-200 hover:text-white">
+            <a href="#terms" className="py-1 text-[#e9d5ff] transition-colors duration-200 hover:text-white">
               Terms of Service
             </a>
           </div>

@@ -61,7 +61,7 @@ export default function Portfolio() {
           <a
             href="#contact"
             id="btn-view-all-projects"
-            className="inline-flex items-center gap-1.5 rounded-full bg-brand px-[1.4rem] py-[0.65rem] text-sm font-semibold whitespace-nowrap text-white transition-all duration-200 hover:-translate-y-px hover:bg-brand-dark"
+            className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-brand px-[1.4rem] py-[0.65rem] text-sm font-semibold whitespace-nowrap text-white transition-all duration-200 hover:-translate-y-px hover:bg-brand-dark"
           >
             View All Projects
             <ArrowRight size={14} strokeWidth={2} />
@@ -89,7 +89,7 @@ export default function Portfolio() {
               </div>
 
               <div className="flex flex-col">
-                <span className="mb-[0.65rem] inline-block self-start rounded-full bg-line px-2.5 py-[0.2rem] text-[0.6875rem] font-semibold text-[#4b5563]">
+                <span className="mb-[0.65rem] inline-block self-start rounded-full bg-line px-2.5 py-[0.2rem] text-[0.75rem] font-semibold text-[#4b5563]">
                   {proj.tag}
                 </span>
                 <h3 className="mb-2 font-display text-[1.15rem] font-bold text-ink">
