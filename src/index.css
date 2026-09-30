@@ -1,0 +1,338 @@
+@import "tailwindcss";
+
+/* ========================================
+   KODEIO — Design System (Tailwind v4)
+   Tokens live in @theme and generate
+   utilities: bg-brand, text-ink, font-display,
+   rounded-card, shadow-lift, max-w-site, etc.
+   ======================================== */
+
+@theme {
+  /* Colors — brand purple confirmed by client; matches kodeio-web.svg and the
+     dominant accent measured from home.png. Scale derived by mixing toward
+     white / darkening, not eyeballed. */
+  --color-brand: #7d2eff;
+  --color-brand-dark: #6726d1;
+  --color-brand-muted: #f0e6ff;
+  --color-brand-tint: #f7f2ff;
+
+  /* Neutrals — ink and body confirmed by client. Both are perfectly neutral
+     (R=G=B); the previous values were Tailwind slate and read blue.
+     ink-soft / muted are derived to sit between/above the anchors. */
+  --color-ink: #1e1e1e;
+  --color-ink-soft: #333333;
+  --color-body: #757575;
+  --color-muted: #8f8f8f;
+  --color-line: #e5e7eb;
+  --color-line-soft: #f0f0f2;
+
+  --color-surface: #f9f9fb;
+  --color-surface-2: #f7f7f8;
+  --color-surface-3: #f3f3f5;
+  --color-surface-4: #f4f4f6;
+
+  --color-amber: #f59e0b;
+  --color-success: #10b981;
+  --color-success-dark: #059669;
+  --color-success-bg: #ecfdf5;
+  --color-accent-orange: #ea580c;
+  --color-accent-orange-dark: #c2410c;
+  --color-accent-orange-bg: #fff7ed;
+  --color-accent-orange-line: #ffedd5;
+  --color-accent-orange-edge: #fed7aa;
+
+  /* Typography */
+  --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", "Roboto", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+
+  /* Layout — 1128px is the widest content band measured in home.png (FAQ).
+     This drives every section from the header down. The footer is the one
+     exception and stays on `.container-narrow` (1120px). Narrowing the
+     container is what creates the side margins; widening it removes them. */
+  --container-site: 1128px;
+
+  /* Radii */
+  --radius-chip: 6px;
+  --radius-card: 12px;
+  --radius-lg: 16px;
+
+  /* Shadows */
+  --shadow-lift: 0 12px 30px rgb(0 0 0 / 0.06);
+  --shadow-hover: 0 16px 40px rgb(0 0 0 / 0.09);
+  --shadow-brand: 0 4px 14px rgb(125 46 255 / 0.25);
+  --shadow-brand-lg: 0 12px 40px rgb(125 46 255 / 0.4);
+
+  /* Animations */
+  --animate-fade-in: fade-in 0.2s ease both;
+  /* `backwards` (not `both`): holds the 0% frame during the animation-delay so
+     the staggered cards stay hidden until their turn, then RELEASES the
+     element once the animation ends. Using `both` would pin the final keyframe
+     forever, and since animations outrank normal declarations that would freeze
+     any later `transform` on the same element. */
+  --animate-hero-bounce: hero-bounce 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  --animate-hero-bounce-phone: hero-bounce-phone 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  /* Perpetual float for the hero mockups. Duration/delay are overridden
+     per-figure in Hero.jsx; the negative delays start each image at a
+     different phase so they never bob in lockstep. */
+  --animate-hero-float: hero-float 5.4s ease-in-out infinite;
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* One-shot bounce: land with a squash, then settle. */
+  @keyframes hero-bounce {
+    0% {
+      opacity: 0;
+      transform: translateY(-46px) scaleY(0.86) scaleX(1.06);
+    }
+
+    55% {
+      opacity: 1;
+      transform: translateY(0) scaleY(1.1) scaleX(0.95);
+    }
+
+    75% {
+      transform: translateY(-11px) scaleY(0.96) scaleX(1.02);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0) scaleY(1) scaleX(1);
+    }
+  }
+
+  @keyframes hero-bounce-phone {
+    0% {
+      opacity: 0;
+      transform: translateY(-64px) scaleY(0.8) scaleX(1.1);
+    }
+
+    50% {
+      opacity: 1;
+      transform: translateY(4px) scaleY(1.08) scaleX(0.95);
+    }
+
+    72% {
+      transform: translateY(-14px) scaleY(0.95) scaleX(1.03);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0) scaleY(1) scaleX(1);
+    }
+  }
+
+  /* Endless gentle float. Lives on a wrapper INSIDE the figure, because the
+     outer figure already owns `transform` for the entrance bounce — two
+     animations fighting over one property would clobber each other. */
+  @keyframes hero-float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-16px);
+    }
+  }
+}
+
+/* ========================================
+   BASE
+   ======================================== */
+@layer base {
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-body);
+    background-color: #fff;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--color-ink);
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  img {
+    max-width: 100%;
+    display: block;
+  }
+
+  button {
+    cursor: pointer;
+    font-family: var(--font-sans);
+    border: none;
+    background: none;
+  }
+}
+
+/* ========================================
+   COMPONENT PRIMITIVES
+   ======================================== */
+@layer components {
+
+  /* NAMED `.shell`, NOT `.container`: Tailwind v4 ships a built-in
+     `.container` utility in the `utilities` layer, which outranks this
+     `components` layer. Its responsive `max-width: 80rem` was silently
+     winning at >=1280px viewports, pinning every section to 1280px and
+     ignoring the token below entirely. Avoiding the name sidesteps the
+     cascade instead of fighting it. */
+  .shell {
+    max-width: var(--container-site);
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  /* Deliberately 4px narrower than `.shell` so the footer keeps its
+     original measure while the rest of the page sits on 1128px. */
+  .shell-narrow {
+    max-width: 1120px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200;
+  }
+
+  .btn-primary {
+    @apply bg-brand text-white shadow-brand;
+  }
+
+  .btn-primary:hover {
+    /* Hover darkens rather than lightens: #7D2EFF is already bright, so a
+       lighter tint drops white text to 4.48:1 (under WCAG AA 4.5:1).
+       brand-dark holds 7.57:1 with a comfortable margin. */
+    @apply -translate-y-0.5 bg-brand-dark shadow-brand-lg;
+  }
+
+  .btn-secondary {
+    @apply border-[1.5px] border-line bg-white text-ink;
+  }
+
+  .btn-secondary:hover {
+    @apply border-brand bg-brand-muted text-brand;
+  }
+
+  /* Gradient-clipped text, used for the footer watermark */
+  .text-gradient {
+    background-image: linear-gradient(180deg,
+        rgb(255 255 255 / 0.35) 0%,
+        rgb(255 255 255 / 0.05) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Scroll reveal — toggled by the `visible` class from useInView */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+      opacity 0.6s ease,
+      transform 0.6s ease;
+  }
+
+  .reveal.reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Staggered children */
+  .stagger>* {
+    opacity: 0;
+    transform: translateY(24px);
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s ease;
+  }
+
+  .stagger.reveal-visible>*:nth-child(1) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0s;
+  }
+
+  .stagger.reveal-visible>*:nth-child(2) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.1s;
+  }
+
+  .stagger.reveal-visible>*:nth-child(3) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.2s;
+  }
+
+  .stagger.reveal-visible>*:nth-child(4) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.3s;
+  }
+
+  .stagger.reveal-visible>*:nth-child(5) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.4s;
+  }
+
+  .stagger.reveal-visible>*:nth-child(6) {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.5s;
+  }
+}
+
+/* ========================================
+   REDUCED MOTION
+   ======================================== */
+@layer utilities {
+  @media (prefers-reduced-motion: reduce) {
+
+    /* The float runs forever, so it is the first thing to cut for users who
+       ask for reduced motion. Entrance bounces are left intact — they are
+       short, one-shot, and part of the page-load reveal. */
+    [class*="animate-hero-float"] {
+      animation: none !important;
+    }
+  }
+}
