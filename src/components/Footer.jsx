@@ -53,9 +53,9 @@ const forLearners = [
 ];
 
 const socials = [
-  { label: 'Instagram', href: 'https://instagram.com' },
-  { label: 'LinkedIn', href: 'https://linkedin.com' },
-  { label: 'X', href: 'https://x.com' },
+  { label: 'Instagram', href: 'https://instagram.com/kodei0' },
+  { label: 'LinkedIn', href: 'https://linkedin.com/company/kodei0' },
+  { label: 'X', href: 'https://x.com/kodei0' },
 ];
 
 function LinkColumn({ heading, links }) {
@@ -101,9 +101,7 @@ export default function Footer() {
               />
             </a>
             <p className="mb-7 text-[0.84rem] leading-[1.7] text-[#e9d5ff]">
-              We design and develop websites, mobile apps, and digital products for modern brands.
-              We also train aspiring designers and developers through practical bootcamps and
-              internship pathways.
+              Kodeio Technologies is a technology-driven ecosystem built at the intersection of learning, innovation, and real-world product development. We exist to cultivate a space where education is not separate from practice, but deeply connected to it - where learning and building converge to shape the digital future.
             </p>
             <div className="flex items-center gap-[0.65rem]">
               {socials.map(({ label, href }) => (
@@ -141,10 +139,18 @@ export default function Footer() {
                 </li>
                 <li>
                   <a
-                    href="tel:+234567878900"
+                    href="tel:+2348169098986"
                     className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
                   >
-                    +234567878900
+                    +234 816 909 8986
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="tel:+2348169405727"
+                    className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
+                  >
+                    +234 816 940 5727
                   </a>
                 </li>
               </ul>
@@ -154,8 +160,8 @@ export default function Footer() {
 
         {/* Wraps: at <=430px the copyright and the two links cannot share a
             line, and without flex-wrap they crushed into four ragged lines. */}
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-white/15 pt-6 text-xs text-[#e9d5ff]">
-          <p>© 2026 Kodeio. All rights reserved.</p>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-white/70 pt-6 text-xs text-[#e9d5ff]">
+          <p>© {new Date().getFullYear()} Kodeio Technologies Ltd. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#privacy" className="py-1 text-[#e9d5ff] transition-colors duration-200 hover:text-white">
               Privacy Policy

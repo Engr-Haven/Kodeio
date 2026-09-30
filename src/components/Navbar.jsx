@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 
 const navLinks = [
-  { label: 'services', href: '#services', hasDropdown: true },
-  { label: 'courses', href: '#courses' },
-  { label: 'portfolio', href: '#portfolio' },
-  { label: 'about us', href: '#about' },
+  { label: 'Services', href: '#services', hasDropdown: true },
+  { label: 'Courses', href: '#courses' },
+  { label: 'Portfolio', href: '#portfolio' },
+  { label: 'About Us', href: '#about' },
+  { label: 'Contact Us', href: '#contact' }
 ];
 
 export default function Navbar() {
@@ -27,11 +28,10 @@ export default function Navbar() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-1000 border-b backdrop-blur-[16px] transition-all duration-300 ${
-        scrolled
+      className={`fixed inset-x-0 top-0 z-1000 border-b backdrop-blur-[16px] transition-all duration-300 ${scrolled
           ? 'border-line bg-white/98 shadow-[0_2px_20px_rgba(0,0,0,0.06)]'
           : 'border-transparent bg-white/92'
-      }`}
+        }`}
     >
       <div className="shell grid h-[68px] grid-cols-[1fr_auto] items-center gap-4 max-[900px]:grid-cols-[1fr_auto] lg:grid-cols-[1fr_auto_1fr]">
         {/* ── Left: Logo ────────────────── */}
@@ -97,19 +97,16 @@ export default function Navbar() {
           className="flex h-11 w-11 cursor-pointer flex-col items-center justify-center gap-[5px] rounded-chip lg:hidden"
         >
           <span
-            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${
-              menuOpen ? 'translate-y-[7px] rotate-45' : ''
-            }`}
+            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${menuOpen ? 'translate-y-[7px] rotate-45' : ''
+              }`}
           />
           <span
-            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${
-              menuOpen ? 'scale-x-0 opacity-0' : ''
-            }`}
+            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${menuOpen ? 'scale-x-0 opacity-0' : ''
+              }`}
           />
           <span
-            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${
-              menuOpen ? '-translate-y-[7px] -rotate-45' : ''
-            }`}
+            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''
+              }`}
           />
         </button>
       </div>
@@ -121,11 +118,10 @@ export default function Navbar() {
           link ("services") painted and hit-testable on top of the hero. */}
       <div
         id="nav-mobile-menu"
-        className={`flex flex-col gap-1.5 overflow-hidden bg-white px-6 transition-all duration-400 lg:hidden ${
-          menuOpen
+        className={`flex flex-col gap-1.5 overflow-hidden bg-white px-6 transition-all duration-400 lg:hidden ${menuOpen
             ? 'max-h-[400px] border-t border-line pt-4 pb-6'
             : 'max-h-0 border-t-0 pt-0 pb-0'
-        }`}
+          }`}
       >
         {navLinks.map((link) => (
           <a
