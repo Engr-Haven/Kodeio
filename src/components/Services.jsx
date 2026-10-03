@@ -1,7 +1,9 @@
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
 
+// Maps each service accordion to its anchor on /services
 const services = [
   {
     number: '01',
@@ -9,6 +11,7 @@ const services = [
     description:
       'We craft distinctive brand identities that communicate your values and resonate with your audience.',
     tags: ['Logo Design', 'Typography Systems', 'Brand Colors', 'Visual Guidelines'],
+    serviceHref: '/services/brand-identity',
   },
   {
     number: '02',
@@ -16,6 +19,7 @@ const services = [
     description:
       'User-centered design solutions that are beautiful, intuitive, and conversion-focused.',
     tags: ['User Research', 'Prototypes', 'Wireframes', 'UX Audit'],
+    serviceHref: '/services/mobile-app-design',
   },
   {
     number: '03',
@@ -29,6 +33,7 @@ const services = [
       'SEO Optimization',
       'CMS Integration',
     ],
+    serviceHref: '/services/web-development',
   },
   {
     number: '04',
@@ -36,6 +41,7 @@ const services = [
     description:
       'End-to-end mobile design for iOS and Android with pixel-perfect prototypes.',
     tags: ['iOS & Android Design', 'App Prototypes', 'App Poster Design'],
+    serviceHref: '/services/mobile-app-design',
   },
   {
     number: '05',
@@ -43,6 +49,7 @@ const services = [
     description:
       'High-converting online stores built to drive sales and enhance user experience.',
     tags: ['Online Store Design', 'Product Pages', 'Payment Integration'],
+    serviceHref: '/services/ecommerce',
   },
 ];
 
@@ -54,13 +61,24 @@ export default function Services() {
   return (
     <section id="services" className="bg-white pt-20 pb-24">
       <div className="shell">
-        <div ref={head.ref} className="reveal mb-10">
-          <span className="mb-[0.35rem] block text-sm font-medium text-body">Our Services</span>
-          <h2 className="font-display text-[clamp(2rem,3.5vw,2.75rem)] font-extrabold tracking-[-0.02em] text-ink">
-            What we Offer
-          </h2>
+        {/* ── Heading + "View All" link ── */}
+        <div ref={head.ref} className="reveal mb-10 flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <span className="mb-[0.35rem] block text-sm font-medium text-body">Our Services</span>
+            <h2 className="font-display text-[clamp(2rem,3.5vw,2.75rem)] font-extrabold tracking-[-0.02em] text-ink">
+              What we Offer
+            </h2>
+          </div>
+          <Link
+            to="/services/web-development"
+            className="inline-flex items-center gap-1.5 rounded-full border-[1.5px] border-brand bg-white px-5 py-2 text-sm font-semibold text-brand transition-all duration-200 hover:-translate-y-px hover:bg-brand-tint"
+          >
+            View All Services
+            <ArrowRight size={14} strokeWidth={2} />
+          </Link>
         </div>
 
+        {/* ── Accordion list ── */}
         <div ref={list.ref} className="reveal flex flex-col gap-[0.85rem]">
           {services.map((svc, i) => (
             <div
@@ -103,7 +121,14 @@ export default function Services() {
 
               {openIndex === i && (
                 <div className="animate-fade-in px-7 pb-5 text-sm leading-[1.6] text-body max-[768px]:px-5 max-[768px]:pb-4">
-                  <p>{svc.description}</p>
+                  <p className="mb-4">{svc.description}</p>
+                  <Link
+                    to={svc.serviceHref}
+                    className="inline-flex items-center gap-1 text-[0.8125rem] font-semibold text-brand transition-colors hover:text-brand-dark"
+                  >
+                    See pricing & details
+                    <ArrowRight size={12} strokeWidth={2.5} />
+                  </Link>
                 </div>
               )}
             </div>

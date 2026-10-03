@@ -1,17 +1,51 @@
-import { useState, useEffect } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { ChevronDown, Palette, Globe, Smartphone, ShoppingBag, ArrowRight } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+
+const servicesList = [
+  {
+    title: 'Brand Identity Design',
+    desc: 'Logos, color palettes & visual systems',
+    href: '/services/brand-identity',
+    icon: Palette,
+  },
+  {
+    title: 'Website Development',
+    desc: 'Fast, responsive websites & CMS solutions',
+    href: '/services/web-development',
+    icon: Globe,
+  },
+  {
+    title: 'Mobile App Design',
+    desc: 'iOS & Android UI/UX & prototypes',
+    href: '/services/mobile-app-design',
+    icon: Smartphone,
+  },
+  {
+    title: 'E-Commerce Development',
+    desc: 'High-converting online stores & payments',
+    href: '/services/ecommerce',
+    icon: ShoppingBag,
+  },
+];
 
 const navLinks = [
-  { label: 'Services', href: '#services', hasDropdown: true },
-  { label: 'Courses', href: '#courses' },
-  { label: 'Portfolio', href: '#portfolio' },
-  { label: 'About Us', href: '#about' },
-  { label: 'Contact Us', href: '#contact' }
+  { label: 'Courses', href: '#courses', isRoute: false },
+  { label: 'Portfolio', href: '#portfolio', isRoute: false },
+  { label: 'About Us', href: '#about', isRoute: false },
+  { label: 'Contact Us', href: '#contact', isRoute: false },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(true);
+  const dropdownRef = useRef(null);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isServicesPage = location.pathname.startsWith('/services');
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -19,24 +53,56 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handler);
   }, []);
 
-  const handleNavClick = (e, href) => {
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setServicesDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Close dropdown and mobile menu on route change
+  useEffect(() => {
+    setServicesDropdownOpen(false);
+    setMenuOpen(false);
+  }, [location.pathname]);
+
+  // Smooth-scroll anchor handler — navigates home first if on /services
+  const handleAnchorClick = (e, href) => {
     e.preventDefault();
     setMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) target.scrollIntoView({ behavior: 'smooth' });
+    setServicesDropdownOpen(false);
+
+    if (isServicesPage) {
+      navigate('/');
+      setTimeout(() => {
+        const target = document.querySelector(href);
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      }, 120);
+    } else {
+      const target = document.querySelector(href);
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    }
   };
+
+  const linkClass =
+    'group/link flex items-center gap-1 rounded-chip px-[0.85rem] py-[0.45rem] text-sm font-medium whitespace-nowrap text-gray-700 transition-all duration-200 hover:bg-brand-muted hover:text-brand';
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-1000 border-b backdrop-blur-[16px] transition-all duration-300 ${scrolled
+      className={`fixed inset-x-0 top-0 z-1000 border-b backdrop-blur-[16px] transition-all duration-300 ${
+        scrolled
           ? 'border-line bg-white/98 shadow-[0_2px_20px_rgba(0,0,0,0.06)]'
           : 'border-transparent bg-white/92'
-        }`}
+      }`}
     >
       <div className="shell grid h-[68px] grid-cols-[1fr_auto] items-center gap-4 max-[900px]:grid-cols-[1fr_auto] lg:grid-cols-[1fr_auto_1fr]">
         {/* ── Left: Logo ────────────────── */}
-        <a
-          href="/"
+        <Link
+          to="/"
           id="nav-logo"
           aria-label="Kodeio — home"
           className="flex items-center justify-self-start"
@@ -48,7 +114,7 @@ export default function Navbar() {
             height={512}
             className="h-7 w-auto shrink-0"
           />
-        </a>
+        </Link>
 
         {/* ── Center: Nav links ─────────── */}
         <nav
@@ -56,22 +122,120 @@ export default function Navbar() {
           aria-label="Main navigation"
           className="hidden items-center justify-self-center gap-1 lg:flex"
         >
+          {/* Services Dropdown */}
+          <div
+            ref={dropdownRef}
+            className="relative"
+            onMouseEnter={() => setServicesDropdownOpen(true)}
+            onMouseLeave={() => setServicesDropdownOpen(false)}
+          >
+            <Link
+              to="/services/web-development"
+              id="nav-services-trigger"
+              className={`${linkClass} ${isServicesPage ? 'text-brand bg-brand-muted font-semibold' : ''}`}
+              onClick={(e) => {
+                // If user clicks directly on services, navigate to web-development
+                setServicesDropdownOpen(false);
+              }}
+            >
+              <span>Services</span>
+              <ChevronDown
+                size={14}
+                strokeWidth={2}
+                className={`transition-transform duration-200 ${
+                  servicesDropdownOpen ? 'rotate-180 text-brand' : 'opacity-60 group-hover/link:opacity-100'
+                }`}
+              />
+            </Link>
+
+            {/* Dropdown Menu */}
+            {servicesDropdownOpen && (
+              <div
+                className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50 animate-fade-in"
+                style={{ width: '380px' }}
+              >
+                <div className="rounded-2xl border border-line bg-white p-3 shadow-[0_12px_40px_rgba(0,0,0,0.12)]">
+                  <div className="px-3 py-1.5 mb-1 flex items-center justify-between border-b border-line-soft pb-2">
+                    <span className="text-[0.72rem] font-bold uppercase tracking-wider text-muted">
+                      Our Services
+                    </span>
+                    <span className="text-[0.72rem] text-brand font-medium">4 Core Disciplines</span>
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    {servicesList.map((svc) => {
+                      const Icon = svc.icon;
+                      const isCurrent = location.pathname === svc.href;
+
+                      return (
+                        <Link
+                          key={svc.title}
+                          to={svc.href}
+                          className={`group flex items-start gap-3.5 rounded-xl p-2.5 transition-all duration-200 ${
+                            isCurrent
+                              ? 'bg-brand-tint border border-brand/20'
+                              : 'hover:bg-surface-2'
+                          }`}
+                          onClick={() => setServicesDropdownOpen(false)}
+                        >
+                          <div
+                            className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-colors ${
+                              isCurrent
+                                ? 'bg-brand text-white shadow-sm'
+                                : 'bg-brand-muted text-brand group-hover:bg-brand group-hover:text-white'
+                            }`}
+                          >
+                            <Icon size={17} strokeWidth={2.2} />
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <h4
+                                className={`text-[0.88rem] font-semibold transition-colors ${
+                                  isCurrent ? 'text-brand' : 'text-ink group-hover:text-brand'
+                                }`}
+                              >
+                                {svc.title}
+                              </h4>
+                              <ArrowRight
+                                size={12}
+                                className="opacity-0 -translate-x-1 transition-all group-hover:opacity-100 group-hover:translate-x-0 text-brand"
+                              />
+                            </div>
+                            <p className="text-[0.75rem] text-body line-clamp-1 leading-normal">
+                              {svc.desc}
+                            </p>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+
+                  <div className="mt-2 border-t border-line-soft pt-2 px-1">
+                    <Link
+                      to="/services/web-development"
+                      onClick={() => setServicesDropdownOpen(false)}
+                      className="flex items-center justify-center gap-1.5 py-1 text-center text-xs font-semibold text-brand hover:underline"
+                    >
+                      <span>Explore Web Development</span>
+                      <ArrowRight size={11} strokeWidth={2.5} />
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Standard Nav Links */}
           {navLinks.map((link) => (
             <a
               key={link.label}
               href={link.href}
-              onClick={(e) => handleNavClick(e, link.href)}
+              onClick={(e) => handleAnchorClick(e, link.href)}
               id={`nav-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
-              className="group/link flex items-center gap-1 rounded-chip px-[0.85rem] py-[0.45rem] text-sm font-medium whitespace-nowrap text-gray-700 transition-all duration-200 hover:bg-brand-muted hover:text-brand"
+              className={linkClass}
             >
               {link.label}
-              {link.hasDropdown && (
-                <ChevronDown
-                  size={13}
-                  strokeWidth={1.6}
-                  className="opacity-60 transition-opacity group-hover/link:opacity-100"
-                />
-              )}
             </a>
           ))}
         </nav>
@@ -81,7 +245,7 @@ export default function Navbar() {
           <a
             href="#contact"
             id="nav-cta"
-            onClick={(e) => handleNavClick(e, '#contact')}
+            onClick={(e) => handleAnchorClick(e, '#contact')}
             className="btn btn-primary px-[1.35rem] py-[0.55rem] text-sm font-semibold shadow-[0_4px_14px_rgba(125,46,255,0.25)]"
           >
             start a project
@@ -97,46 +261,87 @@ export default function Navbar() {
           className="flex h-11 w-11 cursor-pointer flex-col items-center justify-center gap-[5px] rounded-chip lg:hidden"
         >
           <span
-            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${menuOpen ? 'translate-y-[7px] rotate-45' : ''
-              }`}
+            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${
+              menuOpen ? 'translate-y-[7px] rotate-45' : ''
+            }`}
           />
           <span
-            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${menuOpen ? 'scale-x-0 opacity-0' : ''
-              }`}
+            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${
+              menuOpen ? 'scale-x-0 opacity-0' : ''
+            }`}
           />
           <span
-            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''
-              }`}
+            className={`block h-0.5 w-[22px] rounded bg-ink transition-all duration-300 ${
+              menuOpen ? '-translate-y-[7px] -rotate-45' : ''
+            }`}
           />
         </button>
       </div>
 
-      {/* Mobile dropdown menu.
-          Padding and the top border must be toggled WITH the max-height:
-          `max-h-0` only clamps the content box, so fixed pt-4/pb-6 and the
-          1px border kept the closed panel 41px tall — which left the first
-          link ("services") painted and hit-testable on top of the hero. */}
+      {/* Mobile dropdown menu */}
       <div
         id="nav-mobile-menu"
-        className={`flex flex-col gap-1.5 overflow-hidden bg-white px-6 transition-all duration-400 lg:hidden ${menuOpen
-            ? 'max-h-[400px] border-t border-line pt-4 pb-6'
-            : 'max-h-0 border-t-0 pt-0 pb-0'
-          }`}
+        className={`flex flex-col gap-1 overflow-y-auto bg-white px-5 transition-all duration-300 lg:hidden ${
+          menuOpen
+            ? 'max-h-[85vh] border-t border-line pt-3 pb-6 shadow-xl'
+            : 'max-h-0 border-t-0 pt-0 pb-0 overflow-hidden'
+        }`}
       >
+        {/* Mobile Services Accordion */}
+        <div className="border-b border-line-soft pb-2 mb-1">
+          <button
+            onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+            className="flex w-full items-center justify-between rounded-chip px-3 py-2.5 text-[0.95rem] font-bold text-ink hover:bg-brand-muted"
+          >
+            <span className={isServicesPage ? 'text-brand' : ''}>Services</span>
+            <ChevronDown
+              size={16}
+              className={`transition-transform duration-200 ${mobileServicesOpen ? 'rotate-180 text-brand' : ''}`}
+            />
+          </button>
+
+          {mobileServicesOpen && (
+            <div className="mt-1 flex flex-col gap-1 pl-3">
+              {servicesList.map((svc) => {
+                const Icon = svc.icon;
+                const isCurrent = location.pathname === svc.href;
+
+                return (
+                  <Link
+                    key={svc.title}
+                    to={svc.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-semibold transition-colors ${
+                      isCurrent
+                        ? 'bg-brand-tint text-brand'
+                        : 'text-gray-700 hover:bg-surface-2 hover:text-brand'
+                    }`}
+                  >
+                    <Icon size={14} className="text-brand shrink-0" />
+                    <span>{svc.title}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        {/* Regular Mobile Links */}
         {navLinks.map((link) => (
           <a
             key={link.label}
             href={link.href}
-            onClick={(e) => handleNavClick(e, link.href)}
-            className="block rounded-chip px-4 py-[0.7rem] text-[0.95rem] font-medium text-gray-700 transition-all duration-200 hover:bg-brand-muted hover:text-brand"
+            onClick={(e) => handleAnchorClick(e, link.href)}
+            className="block rounded-chip px-3 py-2 text-[0.92rem] font-medium text-gray-700 transition-all duration-200 hover:bg-brand-muted hover:text-brand"
           >
             {link.label}
           </a>
         ))}
+
         <a
           href="#contact"
-          onClick={(e) => handleNavClick(e, '#contact')}
-          className="btn btn-primary mt-1 w-full min-h-11 py-[0.7rem]"
+          onClick={(e) => handleAnchorClick(e, '#contact')}
+          className="btn btn-primary mt-3 w-full min-h-11 py-[0.7rem]"
         >
           start a project
         </a>

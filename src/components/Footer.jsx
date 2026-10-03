@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 // lucide-react v1 no longer ships brand icons, so the three social marks
 // stay as inline SVG (they were hand-drawn in the original markup anyway).
 const brandIcons = {
@@ -32,7 +34,7 @@ const brandIcons = {
 const quickLinks = [
   { label: 'Home', href: '#home' },
   { label: 'About', href: '#about' },
-  { label: 'Services', href: '#services' },
+  { label: 'Services', href: '/services/web-development' },
   { label: 'Case Studies', href: '#portfolio' },
   { label: 'Bootcamps', href: '#courses' },
   { label: 'FAQ', href: '#faq' },
@@ -40,11 +42,11 @@ const quickLinks = [
 ];
 
 const forClients = [
-  { label: 'Website Design', href: '#services' },
-  { label: 'Website Development', href: '#services' },
-  { label: 'Mobile App Design', href: '#services' },
+  { label: 'Brand Identity Design', href: '/services/brand-identity' },
+  { label: 'Website Development', href: '/services/web-development' },
+  { label: 'Mobile App Design', href: '/services/mobile-app-design' },
+  { label: 'E-Commerce Development', href: '/services/ecommerce' },
   { label: 'Case Studies', href: '#portfolio' },
-  { label: 'Apps Screenshot', href: '#portfolio' },
 ];
 
 const forLearners = [
@@ -67,12 +69,21 @@ function LinkColumn({ heading, links }) {
       <ul className="flex flex-col gap-[0.65rem]">
         {links.map((link) => (
           <li key={link.label}>
-            <a
-              href={link.href}
-              className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
-            >
-              {link.label}
-            </a>
+            {link.href.startsWith('/') ? (
+              <Link
+                to={link.href}
+                className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                href={link.href}
+                className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
+              >
+                {link.label}
+              </a>
+            )}
           </li>
         ))}
       </ul>
