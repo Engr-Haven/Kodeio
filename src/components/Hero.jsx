@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useInView } from '../hooks/useInView';
 
 const mockups = {
@@ -49,25 +49,19 @@ const FLOAT = {
 
 export default function Hero() {
   const text = useInView(0.1);
-  const { ref: mockupsRef, visible: mockupsVisible } = useInView(0.1);
 
   // Replays the bounce on every entry into view, not just the first.
   // Bumping `bounceTick` remounts the grid, which restarts the CSS animations
   // (a class toggle alone will not re-run an animation that already finished).
+  // `repeat` keeps the single observer alive for that replay — previously this
+  // ran a second IntersectionObserver on the same node at a different
+  // threshold, so one element was being watched twice with two callbacks.
   const [bounceTick, setBounceTick] = useState(0);
-  useEffect(() => {
-    const el = mockupsRef.current;
-    if (!el || typeof IntersectionObserver === 'undefined') return;
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setBounceTick((t) => t + 1);
-      },
-      { threshold: 0.2 }
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [mockupsRef]);
+  const handleMockupsEnter = useCallback(() => setBounceTick((t) => t + 1), []);
+  const { ref: mockupsRef, visible: mockupsVisible } = useInView(0.1, {
+    repeat: true,
+    onEnter: handleMockupsEnter,
+  });
 
   // Staggered entrance, re-applied on each new tick.
   const bounce = (delay) =>

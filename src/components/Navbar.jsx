@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronDown, Palette, Globe, Smartphone, ShoppingBag, ArrowRight } from 'lucide-react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const servicesList = [
   {
@@ -29,11 +29,16 @@ const servicesList = [
   },
 ];
 
+// Explicit `to` per entry. Courses, Portfolio, About Us and Contact Us are real
+// routes; `/#faq` is the one entry still pointing at a home-page section, which
+// needs the leading `/` because a bare hash does not change the route and would
+// be inert on /services/* and the other sub-pages. Layout resolves the hash
+// after the home page has committed.
 const navLinks = [
-  { label: 'Courses', href: '#courses', isRoute: false },
-  { label: 'Portfolio', href: '#portfolio', isRoute: false },
-  { label: 'About Us', href: '#about', isRoute: false },
-  { label: 'Contact Us', href: '#contact', isRoute: false },
+  { label: 'Courses', to: '/courses' },
+  { label: 'Portfolio', to: '/portfolio' },
+  { label: 'About Us', to: '/about' },
+  { label: 'Contact Us', to: '/contact' },
 ];
 
 export default function Navbar() {
@@ -44,7 +49,6 @@ export default function Navbar() {
   const dropdownRef = useRef(null);
 
   const location = useLocation();
-  const navigate = useNavigate();
   const isServicesPage = location.pathname.startsWith('/services');
 
   useEffect(() => {
@@ -70,23 +74,17 @@ export default function Navbar() {
     setMenuOpen(false);
   }, [location.pathname]);
 
-  // Smooth-scroll anchor handler — navigates home first if on /services
-  const handleAnchorClick = (e, href) => {
-    e.preventDefault();
-    setMenuOpen(false);
-    setServicesDropdownOpen(false);
-
-    if (isServicesPage) {
-      navigate('/');
-      setTimeout(() => {
-        const target = document.querySelector(href);
-        if (target) target.scrollIntoView({ behavior: 'smooth' });
-      }, 120);
-    } else {
-      const target = document.querySelector(href);
-      if (target) target.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  // Close both menus on Escape. Bound to the document rather than to the
+  // header so it works no matter where focus currently sits.
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key !== 'Escape') return;
+      setServicesDropdownOpen(false);
+      setMenuOpen(false);
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const linkClass =
     'group/link flex items-center gap-1 rounded-chip px-[0.85rem] py-[0.45rem] text-sm font-medium whitespace-nowrap text-gray-700 transition-all duration-200 hover:bg-brand-muted hover:text-brand';
@@ -128,15 +126,27 @@ export default function Navbar() {
             className="relative"
             onMouseEnter={() => setServicesDropdownOpen(true)}
             onMouseLeave={() => setServicesDropdownOpen(false)}
+            /* Focus handlers mirror the hover ones so the menu is reachable by
+               keyboard. onBlur only closes when focus leaves the wrapper
+               entirely, otherwise tabbing from the trigger into the panel
+               would close it out from under the user. */
+            onFocus={() => setServicesDropdownOpen(true)}
+            onBlur={(e) => {
+              if (!dropdownRef.current?.contains(e.relatedTarget)) {
+                setServicesDropdownOpen(false);
+              }
+            }}
           >
             <Link
               to="/services/web-development"
               id="nav-services-trigger"
+              aria-haspopup="true"
+              aria-expanded={servicesDropdownOpen}
+              aria-controls="nav-services-menu"
               className={`${linkClass} ${isServicesPage ? 'text-brand bg-brand-muted font-semibold' : ''}`}
-              onClick={(e) => {
-                // If user clicks directly on services, navigate to web-development
-                setServicesDropdownOpen(false);
-              }}
+              /* The trigger is also a real link: activating it navigates to
+                 the default service rather than being a dead menu button. */
+              onClick={() => setServicesDropdownOpen(false)}
             >
               <span>Services</span>
               <ChevronDown
@@ -151,6 +161,7 @@ export default function Navbar() {
             {/* Dropdown Menu */}
             {servicesDropdownOpen && (
               <div
+                id="nav-services-menu"
                 className="absolute top-full left-1/2 -translate-x-1/2 pt-2 z-50 animate-fade-in"
                 style={{ width: '380px' }}
               >
@@ -228,28 +239,32 @@ export default function Navbar() {
 
           {/* Standard Nav Links */}
           {navLinks.map((link) => (
-            <a
+            <Link
               key={link.label}
-              href={link.href}
-              onClick={(e) => handleAnchorClick(e, link.href)}
+              to={link.to}
+              onClick={() => setServicesDropdownOpen(false)}
               id={`nav-${link.label.toLowerCase().replace(/\s+/g, '-')}`}
-              className={linkClass}
+              /* Only the route entries can be "current" — a section link's `to`
+                 carries a hash and will never equal a bare pathname. */
+              className={`${linkClass} ${
+                location.pathname === link.to ? 'text-brand bg-brand-muted font-semibold' : ''
+              }`}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         {/* ── Right: CTA button ─────────── */}
         <div className="hidden items-center justify-end gap-3 lg:flex">
-          <a
-            href="#contact"
+          <Link
+            to="/contact"
             id="nav-cta"
-            onClick={(e) => handleAnchorClick(e, '#contact')}
+            onClick={() => setServicesDropdownOpen(false)}
             className="btn btn-primary px-[1.35rem] py-[0.55rem] text-sm font-semibold shadow-[0_4px_14px_rgba(125,46,255,0.25)]"
           >
             start a project
-          </a>
+          </Link>
         </div>
 
         {/* ── Mobile: Hamburger ─────────── */}
@@ -328,23 +343,27 @@ export default function Navbar() {
 
         {/* Regular Mobile Links */}
         {navLinks.map((link) => (
-          <a
+          <Link
             key={link.label}
-            href={link.href}
-            onClick={(e) => handleAnchorClick(e, link.href)}
-            className="block rounded-chip px-3 py-2 text-[0.92rem] font-medium text-gray-700 transition-all duration-200 hover:bg-brand-muted hover:text-brand"
+            to={link.to}
+            onClick={() => setMenuOpen(false)}
+            className={`block rounded-chip px-3 py-2 text-[0.92rem] font-medium transition-all duration-200 ${
+              location.pathname === link.to
+                ? 'bg-brand-muted text-brand'
+                : 'text-gray-700 hover:bg-brand-muted hover:text-brand'
+            }`}
           >
             {link.label}
-          </a>
+          </Link>
         ))}
 
-        <a
-          href="#contact"
-          onClick={(e) => handleAnchorClick(e, '#contact')}
+        <Link
+          to="/contact"
+          onClick={() => setMenuOpen(false)}
           className="btn btn-primary mt-3 w-full min-h-11 py-[0.7rem]"
         >
           start a project
-        </a>
+        </Link>
       </div>
     </header>
   );

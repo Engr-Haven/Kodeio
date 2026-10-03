@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { CONTACT, SOCIALS } from "../data/site";
 
 // lucide-react v1 no longer ships brand icons, so the three social marks
 // stay as inline SVG (they were hand-drawn in the original markup anyway).
@@ -31,34 +32,37 @@ const brandIcons = {
   ),
 };
 
+// Courses, Portfolio, About Us and Contact Us are real routes now. `/#faq` is
+// the one entry still pointing at a home-page section, and it needs the leading
+// `/`: the footer renders on every route and that id only exists on the home
+// page, so a bare hash would leave the link inert on every sub-page. Layout
+// resolves the hash once the home page has committed.
 const quickLinks = [
-  { label: 'Home', href: '#home' },
-  { label: 'About', href: '#about' },
-  { label: 'Services', href: '/services/web-development' },
-  { label: 'Case Studies', href: '#portfolio' },
-  { label: 'Bootcamps', href: '#courses' },
-  { label: 'FAQ', href: '#faq' },
-  { label: 'Contact', href: '#contact' },
+  { label: "Home", to: "/" },
+  { label: "About Us", to: "/about" },
+  { label: "Services", to: "/services/web-development" },
+  { label: "Case Studies", to: "/portfolio" },
+  { label: "Bootcamps", to: "/courses" },
+  { label: "FAQ", to: "/#faq" },
+  { label: "Contact Us", to: "/contact" },
 ];
 
 const forClients = [
-  { label: 'Brand Identity Design', href: '/services/brand-identity' },
-  { label: 'Website Development', href: '/services/web-development' },
-  { label: 'Mobile App Design', href: '/services/mobile-app-design' },
-  { label: 'E-Commerce Development', href: '/services/ecommerce' },
-  { label: 'Case Studies', href: '#portfolio' },
+  { label: "Brand Identity Design", to: "/services/brand-identity" },
+  { label: "Website Development", to: "/services/web-development" },
+  { label: "Mobile App Design", to: "/services/mobile-app-design" },
+  { label: "E-Commerce Development", to: "/services/ecommerce" },
+  { label: "Case Studies", to: "/portfolio" },
 ];
 
 const forLearners = [
-  { label: 'Bootcamp', href: '#courses' },
-  { label: 'Internship Opportunity', href: '#courses' },
+  { label: "Bootcamp", to: "/courses" },
+  { label: "Internship Opportunity", to: "/courses" },
 ];
 
-const socials = [
-  { label: 'Instagram', href: 'https://instagram.com/kodei0' },
-  { label: 'LinkedIn', href: 'https://linkedin.com/company/kodei0' },
-  { label: 'X', href: 'https://x.com/kodei0' },
-];
+// Icons are keyed by the `label` in SOCIALS (src/data/site.js), which the
+// /contact page reads too, so the two stay in sync.
+const socials = SOCIALS;
 
 function LinkColumn({ heading, links }) {
   return (
@@ -69,21 +73,12 @@ function LinkColumn({ heading, links }) {
       <ul className="flex flex-col gap-[0.65rem]">
         {links.map((link) => (
           <li key={link.label}>
-            {link.href.startsWith('/') ? (
-              <Link
-                to={link.href}
-                className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
-              >
-                {link.label}
-              </Link>
-            ) : (
-              <a
-                href={link.href}
-                className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
-              >
-                {link.label}
-              </a>
-            )}
+            <Link
+              to={link.to}
+              className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
+            >
+              {link.label}
+            </Link>
           </li>
         ))}
       </ul>
@@ -93,12 +88,19 @@ function LinkColumn({ heading, links }) {
 
 export default function Footer() {
   return (
-    <footer id="contact" className="relative overflow-hidden bg-brand pt-20 pb-8 text-white">
+    <footer
+      id="contact"
+      className="relative overflow-hidden bg-brand pt-20 pb-8 text-white"
+    >
       <div className="shell-narrow">
         <div className="mb-16 flex justify-between gap-14 max-[900px]:flex-col max-[900px]:gap-10">
           {/* Left Column: Brand */}
           <div className="flex max-w-[360px] flex-col">
-            <a href="/" aria-label="Kodeio — home" className="mb-5 inline-flex items-center">
+            <Link
+              to="/"
+              aria-label="Kodeio — home"
+              className="mb-5 inline-flex items-center"
+            >
               {/* The source logo is purple + dark ink (built for a light background),
                   so it is recoloured to solid white to stay legible on the purple
                   footer. brightness-0 flattens every pixel to black, invert flips
@@ -110,9 +112,13 @@ export default function Footer() {
                 height={512}
                 className="h-8 w-auto brightness-0 invert"
               />
-            </a>
+            </Link>
             <p className="mb-7 text-[0.84rem] leading-[1.7] text-[#e9d5ff]">
-              Kodeio Technologies is a technology-driven ecosystem built at the intersection of learning, innovation, and real-world product development. We exist to cultivate a space where education is not separate from practice, but deeply connected to it - where learning and building converge to shape the digital future.
+              Kodeio Technologies is a technology-driven ecosystem built at the
+              intersection of learning, innovation, and real-world product
+              development. We exist to cultivate a space where education is not
+              separate from practice, but deeply connected to it - where
+              learning and building converge to shape the digital future.
             </p>
             <div className="flex items-center gap-[0.65rem]">
               {socials.map(({ label, href }) => (
@@ -130,8 +136,15 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links Columns */}
-          <div className="flex flex-wrap gap-16 max-[900px]:grid max-[900px]:grid-cols-2 max-[900px]:gap-8">
+          {/* These four columns have to stay on one row. The column area is
+              ~656px and the headings plus longest link in each need ~471px,
+              so the gap has to fit in what is left: gap-16 (64px) came to
+              663px, overflowed by 7px and pushed Contact Info onto its own
+              row. gap-10 leaves ~65px of slack. Below 1080px four columns
+              genuinely cannot fit, so it becomes a 2x2 grid rather than
+              wrapping unpredictably. Keep .verify-footer-row.mjs honest if
+              you change either number. */}
+          <div className="flex flex-wrap gap-10 max-[1080px]:grid max-[1080px]:grid-cols-2 max-[1080px]:gap-8">
             <LinkColumn heading="Quick Links" links={quickLinks} />
             <LinkColumn heading="For Clients" links={forClients} />
             <LinkColumn heading="For Learners" links={forLearners} />
@@ -142,49 +155,42 @@ export default function Footer() {
               <ul className="flex flex-col gap-[0.65rem]">
                 <li>
                   <a
-                    href="mailto:hello@kodeio.com"
+                    href={`mailto:${CONTACT.email}`}
                     className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
                   >
-                    hello@kodeio.com
+                    {CONTACT.email}
                   </a>
                 </li>
-                <li>
-                  <a
-                    href="tel:+2348169098986"
-                    className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
-                  >
-                    +234 816 909 8986
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="tel:+2348169405727"
-                    className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
-                  >
-                    +234 816 940 5727
-                  </a>
-                </li>
+                {CONTACT.phones.map((phone) => (
+                  <li key={phone.href}>
+                    <a
+                      href={phone.href}
+                      className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
+                    >
+                      {phone.label}
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Wraps: at <=430px the copyright and the two links cannot share a
-            line, and without flex-wrap they crushed into four ragged lines. */}
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-t border-white/70 pt-6 text-xs text-[#e9d5ff]">
-          <p>© {new Date().getFullYear()} Kodeio Technologies Ltd. All rights reserved.</p>
-          <div className="flex gap-6">
-            <a href="#privacy" className="py-1 text-[#e9d5ff] transition-colors duration-200 hover:text-white">
-              Privacy Policy
-            </a>
-            <a href="#terms" className="py-1 text-[#e9d5ff] transition-colors duration-200 hover:text-white">
-              Terms of Service
-            </a>
-          </div>
+        {/* Legal links (Privacy Policy, Terms of Service) were removed rather than
+            left pointing at #privacy / #terms, which resolve to nothing. Add
+            them back as real routes once those documents exist. */}
+        <div className="mb-4 border-t border-white/70 pt-6 text-xs text-[#e9d5ff]">
+          <p>
+            © {new Date().getFullYear()} Kodeio Technologies Ltd. All rights
+            reserved.
+          </p>
         </div>
 
         {/* Giant KODEIO Watermark */}
-        <div aria-hidden="true" className="mt-8 overflow-hidden text-center leading-[0.8] select-none">
+        <div
+          aria-hidden="true"
+          className="mt-8 overflow-hidden text-center leading-[0.8] select-none"
+        >
           <span className="text-gradient inline-block font-display text-[clamp(4.5rem,16vw,15rem)] font-black tracking-[0.04em] text-white/18">
             KODEIO
           </span>

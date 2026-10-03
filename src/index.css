@@ -320,6 +320,15 @@
     transform: none;
     transition-delay: 0.5s;
   }
+
+  /* Catch-all for a 7th+ child. Lower specificity than the :nth-child rules
+     above, so those still win — but without this a seventh card would stay at
+     opacity:0 forever. */
+  .stagger.reveal-visible>* {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.6s;
+  }
 }
 
 /* ========================================
@@ -333,6 +342,18 @@
        short, one-shot, and part of the page-load reveal. */
     [class*="animate-hero-float"] {
       animation: none !important;
+    }
+
+    /* Scroll reveals still fire, but as an instant change of opacity with no
+       travel. Leaving the 28px translate in place would mean sliding content
+       across the viewport for users who asked for exactly that not to happen —
+       and it would also mean content stays off-screen if the transition is
+       ever suppressed entirely. */
+    .reveal,
+    .stagger>* {
+      transform: none;
+      transition-duration: 0.01ms;
+      transition-delay: 0s;
     }
   }
 }

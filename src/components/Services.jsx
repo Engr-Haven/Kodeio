@@ -3,7 +3,9 @@ import { ChevronDown, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
 
-// Maps each service accordion to its anchor on /services
+// Each row links to its route on /services. `serviceHref: null` means the row
+// has no dedicated pricing page yet, and its panel renders without the
+// "See pricing & details" link rather than pointing somewhere misleading.
 const services = [
   {
     number: '01',
@@ -19,7 +21,10 @@ const services = [
     description:
       'User-centered design solutions that are beautiful, intuitive, and conversion-focused.',
     tags: ['User Research', 'Prototypes', 'Wireframes', 'UX Audit'],
-    serviceHref: '/services/mobile-app-design',
+    // No /services/ui-ux-design page exists. This used to point at
+    // /services/mobile-app-design — the same destination as row 04 — so two
+    // differently-named rows advertised one page.
+    serviceHref: null,
   },
   {
     number: '03',
@@ -121,14 +126,16 @@ export default function Services() {
 
               {openIndex === i && (
                 <div className="animate-fade-in px-7 pb-5 text-sm leading-[1.6] text-body max-[768px]:px-5 max-[768px]:pb-4">
-                  <p className="mb-4">{svc.description}</p>
-                  <Link
-                    to={svc.serviceHref}
-                    className="inline-flex items-center gap-1 text-[0.8125rem] font-semibold text-brand transition-colors hover:text-brand-dark"
-                  >
-                    See pricing & details
-                    <ArrowRight size={12} strokeWidth={2.5} />
-                  </Link>
+                  <p className={svc.serviceHref ? 'mb-4' : undefined}>{svc.description}</p>
+                  {svc.serviceHref && (
+                    <Link
+                      to={svc.serviceHref}
+                      className="inline-flex items-center gap-1 text-[0.8125rem] font-semibold text-brand transition-colors hover:text-brand-dark"
+                    >
+                      See pricing & details
+                      <ArrowRight size={12} strokeWidth={2.5} />
+                    </Link>
+                  )}
                 </div>
               )}
             </div>
