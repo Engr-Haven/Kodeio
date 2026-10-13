@@ -12,13 +12,17 @@ export default function ContactPage() {
   return (
     <main className="bg-white pt-[105px] pb-24">
       <div className="shell">
-        <div className="mx-auto max-w-[720px] text-center">
+        <div className="mx-auto max-w-[760px] text-center">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-line-soft bg-surface-2 px-4 py-1.5 text-xs font-semibold text-body shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
+            <span className="h-2 w-2 rounded-full bg-emerald-500" />
+            <span>Get in Touch</span>
+          </div>
           <h1 className="mb-5 font-display text-[clamp(2.1rem,4.5vw,3.3rem)] font-extrabold tracking-[-0.03em] text-ink">
-            Contact Us
+            Tell us what you wish to achieve
           </h1>
           <p className="mb-12 text-[0.9375rem] leading-[1.75] text-body">
-            Our enquiry form is on its way. Until then, reach the team directly using any of the
-            details below.
+            Have an inquiry, need a quote or want to discuss partnership opportunities? Give as much
+            detail as possible and we would respond within 24 hours.
           </p>
         </div>
 

@@ -77,6 +77,11 @@
      different phase so they never bob in lockstep. */
   --animate-hero-float: hero-float 5.4s ease-in-out infinite;
 
+  /* Rotating headline word: fades in while flipping up around its bottom
+     edge. `backwards` holds the 0% frame during any delay; the element is
+     remounted (keyed) each tick, which restarts this animation. */
+  --animate-word-flip: word-flip 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) backwards;
+
   @keyframes fade-in {
     from {
       opacity: 0;
@@ -144,6 +149,20 @@
 
     50% {
       transform: translateY(-16px);
+    }
+  }
+
+  /* Hinged at the bottom edge (origin-bottom on the element), the word swings
+     up from face-down into place while fading in. */
+  @keyframes word-flip {
+    from {
+      opacity: 0;
+      transform: rotateX(-90deg);
+    }
+
+    to {
+      opacity: 1;
+      transform: rotateX(0deg);
     }
   }
 }
@@ -341,6 +360,13 @@
        ask for reduced motion. Entrance bounces are left intact — they are
        short, one-shot, and part of the page-load reveal. */
     [class*="animate-hero-float"] {
+      animation: none !important;
+    }
+
+    /* The headline word only cycles when the interval runs (Hero.jsx skips it
+       under this preference), so this just suppresses the one-shot mount flip
+       and shows the static word immediately. */
+    [class*="animate-word-flip"] {
       animation: none !important;
     }
 

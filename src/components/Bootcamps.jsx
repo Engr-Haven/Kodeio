@@ -1,9 +1,11 @@
+import { Link } from 'react-router-dom';
 import { Clock, Users, Download } from 'lucide-react';
 import { useInView } from '../hooks/useInView';
 
 const courses = [
   {
     id: 'uiux',
+    slug: 'product-ui-ux-design',
     status: 'Live Tech Bootcamps',
     statusType: 'active',
     title: 'UI/UX Design Track',
@@ -16,6 +18,7 @@ const courses = [
   },
   {
     id: 'wordpress',
+    slug: 'wordpress-website-design',
     status: 'Coming soon',
     statusType: 'upcoming',
     title: 'WordPress Development',
@@ -28,6 +31,7 @@ const courses = [
   },
   {
     id: 'frontend',
+    slug: 'frontend-development',
     status: 'Live Tech Bootcamps',
     statusType: 'active',
     title: 'Frontend Development',
@@ -84,7 +88,12 @@ export default function Bootcamps() {
               </div>
 
               <h3 className="mb-[0.65rem] font-display text-[1.15rem] font-bold text-ink">
-                {course.title}
+                <Link
+                  to={`/courses/${course.slug}`}
+                  className="hover:text-brand transition-colors"
+                >
+                  {course.title}
+                </Link>
               </h3>
 
               <div className="mb-4 flex items-center gap-[0.6rem] text-[0.78rem] text-body">

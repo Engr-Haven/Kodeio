@@ -1,24 +1,26 @@
-import { useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ChevronDown, Check, PhoneCall } from 'lucide-react';
-import { useInView } from '../hooks/useInView';
-import NotFound from './NotFound';
-import { servicesData, serviceList } from '../data/servicesData';
+import { useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { ChevronDown, Check, PhoneCall } from "lucide-react";
+import { useInView } from "../hooks/useInView";
+import NotFound from "./NotFound";
+import { servicesData, serviceList } from "../data/servicesData";
 
 function PlanCard({ plan, currency }) {
-  const price = currency === 'NGN' ? plan.priceNGN : plan.priceUSD;
-  const isCustom = price === 'Custom Price';
+  const price = currency === "NGN" ? plan.priceNGN : plan.priceUSD;
+  const isCustom = price === "Custom Price";
 
   return (
     <div
       className={`relative flex flex-col rounded-2xl border p-7 transition-all duration-200 hover:-translate-y-1 hover:shadow-lift ${
         plan.highlight
-          ? 'border-brand bg-brand-tint/60 shadow-brand'
-          : 'border-line bg-white'
+          ? "border-brand bg-brand-tint/60 shadow-brand"
+          : "border-line bg-white"
       }`}
     >
       <div className="mb-4">
-        <h3 className="font-display text-[1.2rem] font-bold text-ink">{plan.name}</h3>
+        <h3 className="font-display text-[1.2rem] font-bold text-ink">
+          {plan.name}
+        </h3>
         {plan.subtitle && (
           <p className="mt-1 text-[0.82rem] leading-snug text-body min-h-[2.4rem]">
             {plan.subtitle}
@@ -36,16 +38,16 @@ function PlanCard({ plan, currency }) {
 
       <div className="mb-5">
         <span className="font-display text-[1.5rem] font-extrabold text-ink">
-          {isCustom ? 'Custom Price' : price}
+          {isCustom ? "Custom Price" : price}
         </span>
       </div>
 
       <a
         href="#contact"
         className={`mb-7 inline-flex min-h-11 w-full items-center justify-center rounded-xl text-sm font-semibold transition-all duration-200 ${
-          plan.ctaStyle === 'brand'
-            ? 'bg-brand text-white shadow-brand hover:bg-brand-dark hover:shadow-brand-lg'
-            : 'bg-ink text-white hover:bg-ink-soft'
+          plan.ctaStyle === "brand"
+            ? "bg-brand text-white shadow-brand hover:bg-brand-dark hover:shadow-brand-lg"
+            : "bg-ink text-white hover:bg-ink-soft"
         }`}
       >
         {plan.cta}
@@ -56,8 +58,15 @@ function PlanCard({ plan, currency }) {
       </p>
       <ul className="flex flex-col gap-2.5">
         {plan.features.map((feature) => (
-          <li key={feature} className="flex items-start gap-2.5 text-[0.82rem] leading-[1.55] text-body">
-            <Check size={14} strokeWidth={2.5} className="mt-[3px] shrink-0 text-brand" />
+          <li
+            key={feature}
+            className="flex items-start gap-2.5 text-[0.82rem] leading-[1.55] text-body"
+          >
+            <Check
+              size={14}
+              strokeWidth={2.5}
+              className="mt-[3px] shrink-0 text-brand"
+            />
             <span>{feature}</span>
           </li>
         ))}
@@ -70,7 +79,7 @@ export default function ServiceDetailPage() {
   const { serviceId } = useParams();
   const service = serviceId ? servicesData[serviceId] : null;
 
-  const [currency, setCurrency] = useState('NGN');
+  const [currency, setCurrency] = useState("NGN");
   const [openFaq, setOpenFaq] = useState(-1);
 
   const heroRef = useInView(0.1);
@@ -121,8 +130,8 @@ export default function ServiceDetailPage() {
                     to={`/services/${item.slug}`}
                     className={`rounded-full px-4 py-2 text-xs md:text-sm font-semibold transition-all duration-200 ${
                       isActive
-                        ? 'bg-brand text-white shadow-brand'
-                        : 'border border-line bg-white text-ink-soft hover:border-brand/50 hover:bg-brand-tint hover:text-brand'
+                        ? "bg-brand text-white shadow-brand"
+                        : "border border-line bg-white text-ink-soft hover:border-brand/50 hover:bg-brand-tint hover:text-brand"
                     }`}
                   >
                     {item.title}
@@ -145,17 +154,17 @@ export default function ServiceDetailPage() {
             {/* Currency Selector (NGN / USD) */}
             <div className="mb-10 flex justify-center">
               <div className="inline-flex rounded-full border border-line bg-surface-2 p-1 shadow-sm">
-                {['NGN', 'USD'].map((curr) => (
+                {["NGN", "USD"].map((curr) => (
                   <button
                     key={curr}
                     onClick={() => setCurrency(curr)}
                     className={`rounded-full px-6 py-1.5 text-xs md:text-sm font-semibold transition-all duration-200 cursor-pointer ${
                       currency === curr
-                        ? 'bg-brand text-white shadow-brand'
-                        : 'text-body hover:text-ink'
+                        ? "bg-brand text-white shadow-brand"
+                        : "text-body hover:text-ink"
                     }`}
                   >
-                    {curr === 'NGN' ? 'NGN (₦)' : 'USD($)'}
+                    {curr === "NGN" ? "NGN (₦)" : "USD($)"}
                   </button>
                 ))}
               </div>
@@ -185,8 +194,8 @@ export default function ServiceDetailPage() {
                   key={faq.q}
                   className={`overflow-hidden rounded-xl border transition-all duration-200 ${
                     openFaq === idx
-                      ? 'border-line bg-white shadow-sm'
-                      : 'border-line-soft bg-surface-2 hover:bg-surface-3'
+                      ? "border-line bg-white shadow-sm"
+                      : "border-line-soft bg-surface-2 hover:bg-surface-3"
                   }`}
                 >
                   <button
@@ -199,7 +208,7 @@ export default function ServiceDetailPage() {
                     </span>
                     <div
                       className={`shrink-0 transition-transform duration-200 ${
-                        openFaq === idx ? 'rotate-180 text-brand' : 'text-body'
+                        openFaq === idx ? "rotate-180 text-brand" : "text-body"
                       }`}
                     >
                       <ChevronDown size={16} strokeWidth={2} />
@@ -229,13 +238,13 @@ export default function ServiceDetailPage() {
               <p className="mx-auto mb-8 max-w-[600px] text-[0.9375rem] leading-[1.75] text-body">
                 {service.ctaBody}
               </p>
-              <a
-                href="#contact"
+              <Link
+                to="/contact"
                 className="inline-flex items-center gap-2 rounded-full bg-brand px-8 py-3.5 text-sm font-semibold text-white shadow-brand transition-all duration-200 hover:-translate-y-0.5 hover:bg-brand-dark hover:shadow-brand-lg"
               >
                 <PhoneCall size={15} strokeWidth={2.2} />
                 <span>{service.ctaBtn}</span>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

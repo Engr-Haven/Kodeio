@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useInView } from '../hooks/useInView';
 
 const mockups = {
@@ -36,6 +36,11 @@ const mockups = {
 
 const dropShadow = '[filter:drop-shadow(0_18px_22px_rgba(0,0,0,0.13))]';
 
+/* Rotating completion of the headline. Starts on "Websites" and cycles
+   Brand -> Mobile App -> Web App -> E-commerce -> back to Websites. */
+const ROTATION = ['Websites', 'Brand', 'Mobile App', 'Web App', 'E-commerce'];
+const ROTATION_INTERVAL = 2000;
+
 /* Endless float timings. These MUST stay complete literal strings — Tailwind
    scans source text, so an interpolated `[animation-duration:${d}s]` would be
    invisible to it and the override would silently never apply.
@@ -49,6 +54,19 @@ const FLOAT = {
 
 export default function Hero() {
   const text = useInView(0.1);
+
+  // Rotates the last word of the headline. Skipped under
+  // prefers-reduced-motion: a word swapping every 2s is exactly the kind of
+  // motion that preference asks to remove, so those users keep "Websites".
+  const [wordIndex, setWordIndex] = useState(0);
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const id = setInterval(
+      () => setWordIndex((i) => (i + 1) % ROTATION.length),
+      ROTATION_INTERVAL
+    );
+    return () => clearInterval(id);
+  }, []);
 
   // Replays the bounce on every entry into view, not just the first.
   // Bumping `bounceTick` remounts the grid, which restarts the CSS animations
@@ -109,7 +127,19 @@ export default function Hero() {
         {/* ── Main centered headline & subtitle ─── */}
         <div ref={text.ref} className="reveal mx-auto flex max-w-[820px] flex-col items-center">
           <h1 className="mb-5 font-display text-[clamp(2.4rem,5.2vw,4.4rem)] leading-[1.12] font-extrabold tracking-[-0.035em] text-ink">
-            Kodeio builds Websites.
+            Kodeio builds{' '}
+            {/* Screen readers get the sentence once; the visible word swaps and
+                would otherwise be re-announced on every tick. */}
+            <span className="sr-only">Websites.</span>
+            <span aria-hidden="true" className="inline-block [perspective:700px]">
+              <span
+                key={wordIndex}
+                className="inline-block origin-bottom [backface-visibility:hidden] animate-word-flip"
+              >
+                {ROTATION[wordIndex]}
+              </span>
+              .
+            </span>
           </h1>
           <p className="mb-8 max-w-[680px] text-[clamp(0.95rem,1.6vw,1.0625rem)] leading-[1.65] font-normal text-body">
             From branding to design to development, we build websites, mobile apps, and product
