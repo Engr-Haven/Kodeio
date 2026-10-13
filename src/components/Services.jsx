@@ -17,17 +17,6 @@ const services = [
   },
   {
     number: '02',
-    title: 'UI/UX Design',
-    description:
-      'User-centered design solutions that are beautiful, intuitive, and conversion-focused.',
-    tags: ['User Research', 'Prototypes', 'Wireframes', 'UX Audit'],
-    // No /services/ui-ux-design page exists. This used to point at
-    // /services/mobile-app-design — the same destination as row 04 — so two
-    // differently-named rows advertised one page.
-    serviceHref: null,
-  },
-  {
-    number: '03',
     title: 'Web Development',
     description: 'Modern, fast websites and web applications built with the latest technologies.',
     tags: [
@@ -40,21 +29,21 @@ const services = [
     serviceHref: '/services/web-development',
   },
   {
-    number: '04',
+    number: '03',
     title: 'Mobile App Design & Prototyping',
     description: 'End-to-end mobile design for iOS and Android with pixel-perfect prototypes.',
     tags: ['iOS & Android Design', 'App Prototypes', 'App Poster Design'],
     serviceHref: '/services/mobile-app-design',
   },
   {
-    number: '05',
+    number: '04',
     title: 'E-Commerce Development',
     description: 'High-converting online stores built to drive sales and enhance user experience.',
     tags: ['Online Store Design', 'Product Pages', 'Payment Integration'],
     serviceHref: '/services/ecommerce',
   },
   {
-    number: '06',
+    number: '05',
     title: 'UI/UX & Product Design',
     description:
       'We design intuitive websites and digital products that balance user needs with business goals. From UX research and wireframes to polished UI and prototypes, Kodeio helps turn complex ideas into clear, usable experiences.',
@@ -62,7 +51,7 @@ const services = [
     serviceHref: '/services/ui-ux-product-design',
   },
   {
-    number: '07',
+    number: '06',
     title: 'AI Video Production & UGC Ads',
     description:
       'Kodeio creates AI-powered UGC videos, product ads, and social media videos designed to help businesses showcase their products, explain what they offer, and keep their audience engaged.',
