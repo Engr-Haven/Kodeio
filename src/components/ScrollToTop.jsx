@@ -33,10 +33,9 @@ export default function ScrollToTop() {
       return () => window.removeEventListener('scroll', onScroll);
     }
 
-    const observer = new IntersectionObserver(
-      ([entry]) => setVisible(entry.isIntersecting),
-      { rootMargin: '0px 0px 45% 0px' }
-    );
+    const observer = new IntersectionObserver(([entry]) => setVisible(entry.isIntersecting), {
+      rootMargin: '0px 0px 45% 0px',
+    });
     observer.observe(footer);
     return () => observer.disconnect();
   }, []);
@@ -61,9 +60,7 @@ export default function ScrollToTop() {
       tabIndex={visible ? 0 : -1}
       aria-hidden={!visible}
       className={`fixed right-5 bottom-5 z-40 flex h-12 w-12 items-center justify-center rounded-full border border-line bg-white text-brand shadow-brand transition-all duration-300 hover:-translate-y-0.5 hover:bg-brand hover:text-white hover:shadow-brand-lg max-[640px]:right-4 max-[640px]:bottom-4 ${
-        visible
-          ? 'translate-y-0 opacity-100'
-          : 'pointer-events-none translate-y-3 opacity-0'
+        visible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'
       }`}
     >
       <ArrowUp size={20} strokeWidth={2.2} />

@@ -85,8 +85,8 @@ export default function FAQ() {
             <p className="text-[0.95rem] leading-[1.65] text-body">
               Find Questions? We&apos;ve got answers.
               <br />
-              Whether you&apos;re looking to hire Kodeio or join one of our bootcamps, here are
-              the things people ask most often.
+              Whether you&apos;re looking to hire Kodeio or join one of our bootcamps, here are the
+              things people ask most often.
             </p>
           </div>
 

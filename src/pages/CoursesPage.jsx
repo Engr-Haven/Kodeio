@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Clock, Calendar, Video, ArrowRight, CheckCircle2, Download, Sparkles } from 'lucide-react';
+import { Calendar, Video, ArrowRight, Download, Sparkles } from 'lucide-react';
 import { useInView } from '../hooks/useInView';
 import { courseList } from '../data/coursesData';
 
@@ -30,8 +30,8 @@ export default function CoursesPage() {
             </h1>
 
             <p className="mx-auto mb-6 max-w-[680px] text-[0.9375rem] leading-[1.75] text-body">
-              Courses are designed to help students build real-world projects, gain industry-ready skills,
-              grow strong portfolios, and access internship opportunities.
+              Courses are designed to help students build real-world projects, gain industry-ready
+              skills, grow strong portfolios, and access internship opportunities.
             </p>
           </div>
         </div>
@@ -128,7 +128,10 @@ export default function CoursesPage() {
       {/* ── Bottom Call To Action ── */}
       <section className="py-20 bg-white">
         <div className="shell">
-          <div ref={bottomRef.ref} className="reveal mx-auto flex max-w-[680px] flex-col items-center text-center">
+          <div
+            ref={bottomRef.ref}
+            className="reveal mx-auto flex max-w-[680px] flex-col items-center text-center"
+          >
             <h3 className="mb-3 font-display text-[clamp(1.4rem,2.5vw,1.85rem)] font-bold text-ink">
               Start Your Journey Into Tech With Real Guidance
             </h3>

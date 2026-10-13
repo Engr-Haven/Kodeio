@@ -61,10 +61,7 @@ export default function Hero() {
   const [wordIndex, setWordIndex] = useState(0);
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const id = setInterval(
-      () => setWordIndex((i) => (i + 1) % ROTATION.length),
-      ROTATION_INTERVAL
-    );
+    const id = setInterval(() => setWordIndex((i) => (i + 1) % ROTATION.length), ROTATION_INTERVAL);
     return () => clearInterval(id);
   }, []);
 
@@ -84,9 +81,7 @@ export default function Hero() {
   // Staggered entrance, re-applied on each new tick.
   const bounce = (delay) =>
     mockupsVisible ? `animate-hero-bounce [animation-delay:${delay}ms]` : '';
-  const bouncePhone = mockupsVisible
-    ? 'animate-hero-bounce-phone [animation-delay:180ms]'
-    : '';
+  const bouncePhone = mockupsVisible ? 'animate-hero-bounce-phone [animation-delay:180ms]' : '';
 
   const figure = (media, animation, floatKey, className = '') => (
     <figure className={`m-0 ${animation} ${className}`}>
@@ -108,7 +103,10 @@ export default function Hero() {
   );
 
   return (
-    <section id="home" className="relative flex flex-col items-center overflow-hidden bg-white pt-[105px] pb-20">
+    <section
+      id="home"
+      className="relative flex flex-col items-center overflow-hidden bg-white pt-[105px] pb-20"
+    >
       <div className="shell flex w-full flex-col items-center text-center">
         {/* ── Top announcement badge pill ───────── */}
         <div className="mb-6 flex justify-center">
@@ -142,8 +140,8 @@ export default function Hero() {
             </span>
           </h1>
           <p className="mb-8 max-w-[680px] text-[clamp(0.95rem,1.6vw,1.0625rem)] leading-[1.65] font-normal text-body">
-            From branding to design to development, we build websites, mobile apps, and product
-            that generate leads, drive performance and converts.
+            From branding to design to development, we build websites, mobile apps, and product that
+            generate leads, drive performance and converts.
             <br />
             We train students through bootcamps with internship opportunities for top performers.
           </p>

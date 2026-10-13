@@ -6,44 +6,68 @@ programmes.
 
 ## Stack
 
-| Concern | Choice |
-| --- | --- |
-| Build tool | Vite 8.3 |
-| UI | React 18.3 (JSX, no TypeScript) |
-| Routing | react-router-dom 7 (`BrowserRouter`) |
-| Styling | Tailwind CSS 4.3 via `@tailwindcss/vite` |
-| Icons | lucide-react |
-| Fonts | Bricolage Grotesque + Roboto, loaded from Google Fonts |
+| Concern    | Choice                                                 |
+| ---------- | ------------------------------------------------------ |
+| Build tool | Vite 8.3                                               |
+| UI         | React 18.3 (JSX, no TypeScript)                        |
+| Routing    | react-router-dom 7 (`BrowserRouter`)                   |
+| Styling    | Tailwind CSS 4.3 via `@tailwindcss/vite`               |
+| Icons      | lucide-react                                           |
+| Fonts      | Bricolage Grotesque + Roboto, loaded from Google Fonts |
+| Lint       | ESLint 10 (flat config) + `eslint-plugin-react-hooks`  |
+| Format     | Prettier 3 (`.prettierrc.json`, `singleQuote: true`)   |
 
-No state library, no CSS-in-JS. There is no test runner and no linter
-configured. Developed against Node 22.x.
+No state library, no CSS-in-JS, and no test runner. Developed against Node 22.x.
 
 ## Getting started
 
 ```bash
 npm install
-npm run dev      # dev server with HMR
-npm run build    # production build -> dist/
-npm run preview  # serve the built output locally
+npm run dev          # dev server with HMR
+npm run build        # production build -> dist/
+npm run preview      # serve the built output locally
+npm run lint         # ESLint
+npm run format       # Prettier --write
+npm run format:check # Prettier --check (used in CI)
 ```
 
 `dist/` is generated — don't edit anything in it by hand.
 
+### CI
+
+`.github/workflows/ci.yml` runs `npm ci`, `npm run lint`,
+`npm run format:check`, and `npm run build` on every push to `master` and on
+every pull request. There is still no test runner; the build is the only
+functional check.
+
+### Hosting (SPA rewrites)
+
+This is a client-side-routed SPA, so the host must rewrite unknown paths to
+`index.html` or a refresh on a deep link (`/services/web-development`) will 404. Two configs are checked in for the common hosts — only the one matching
+your host is read:
+
+- `public/_redirects` — Netlify, Cloudflare Pages (`/* /index.html 200`).
+- `vercel.json` — Vercel (`rewrites`).
+
+For any other host (nginx, GitHub Pages, S3), configure the equivalent
+fallback by hand.
+
 ## Routes
 
-| Path | Renders |
-| --- | --- |
-| `/` | `HomePage` — Hero, Services, Bootcamps, Portfolio, FAQ |
-| `/about` | `AboutPage` — **placeholder, content still to be written** |
-| `/courses` | `CoursesPage` — **placeholder, content still to be written** |
-| `/portfolio` | `PortfolioPage` — **placeholder, content still to be written** |
-| `/contact` | `ContactPage` — real contact details, **enquiry form still to be built** |
-| `/services` | Redirects to `/services/web-development` |
-| `/services/:serviceId` | `ServiceDetailPage` — hero, pricing, FAQ, CTA |
-| anything else | `NotFound` |
+| Path                   | Renders                                                                  |
+| ---------------------- | ------------------------------------------------------------------------ |
+| `/`                    | `HomePage` — Hero, Services, Bootcamps, Portfolio, FAQ                   |
+| `/about`               | `AboutPage` — **placeholder, content still to be written**               |
+| `/courses`             | `CoursesPage` — course listing from `coursesData`                        |
+| `/courses/:courseId`   | `CourseDetailPage` — hero, curriculum accordion, CTA                     |
+| `/portfolio`           | `PortfolioPage` — **placeholder, content still to be written**           |
+| `/contact`             | `ContactPage` — real contact details, **enquiry form still to be built** |
+| `/services`            | Redirects to `/services/web-development`                                 |
+| `/services/:serviceId` | `ServiceDetailPage` — hero, pricing, FAQ, CTA                            |
+| anything else          | `NotFound`                                                               |
 
-`serviceId` is a key of `servicesData`. An unknown slug renders the 404 page
-rather than falling back to a default service.
+`serviceId` is a key of `servicesData` and `courseId` is a key of `coursesData`.
+An unknown slug renders the 404 page rather than falling back to a default.
 
 ## Chrome
 
@@ -65,15 +89,18 @@ on `<html>` in `index.css`, which is the opposite of what is wanted there.
 
 ## Placeholder pages
 
-`/about`, `/courses` and `/portfolio` exist as real routes so the navbar and
-footer links resolve to something today instead of being dead anchors. Each one
-renders an honest "on its way" notice plus links to whatever already works —
-there is no placeholder prose or invented copy. Replace a page's contents when
-it is ready; nothing outside `src/pages/` needs to change.
+`/about` and `/portfolio` exist as real routes so the navbar and footer links
+resolve to something today instead of being dead anchors. Each one renders an
+honest "on its way" notice plus links to whatever already works — there is no
+placeholder prose or invented copy. Replace a page's contents when it is ready;
+nothing outside `src/pages/` needs to change.
 
-The three share `src/components/PlaceholderPage.jsx`, which takes `title`, `lede`
-and an `actions` array. Add a fourth by copying one of the pages — it is a few
+The two share `src/components/PlaceholderPage.jsx`, which takes `title`, `lede`
+and an `actions` array. Add a third by copying one of the pages — it is a few
 lines.
+
+`/courses` was a placeholder too and has since been built out: `CoursesPage`
+lists the tracks from `coursesData` and `CourseDetailPage` renders each one.
 
 `/contact` is more than a stub: it shows the email, phone numbers and socials
 from `src/data/site.js`, which the footer also reads, so the two cannot drift
@@ -94,7 +121,8 @@ survive a navigation:
   `scroll-behavior: smooth` on `<html>`, which a bare `scrollTo()` would inherit
   and animate, so you would watch the page slide up on every route change.
 - **`document.title`.** Set to `"<Service> | Kodeio Technologies"` on a service
-  page and back to the site default everywhere else.
+  or course page (read from `servicesData` / `coursesData`, so it cannot drift)
+  and back to the site default everywhere else.
 
 A new page therefore cannot forget to reset either. Put pages in `src/pages/`
 and return a bare `<main>` — do **not** render `Navbar` or `Footer` yourself.
@@ -113,21 +141,32 @@ tab" work.
 `Layout` uses `getElementById(hash.slice(1))`, not `querySelector` — a hash is
 arbitrary user input and anything that is not a valid CSS selector would throw.
 
-## Content: `src/data/servicesData.js`
+## Content: `src/data/`
 
-Single source of truth for every service page. One key per service, each holding
-`headline`, `sub`, `plans`, `faqs`, `tag`, `packagesTitle`, `faqTitle`, and the
-CTA block. `serviceList` exports them in display order and drives the
-sub-page switcher and the 404 shortcuts, so a new service only has to be added
-in one place.
+Three data modules are the source of truth for page content:
 
-Content lives here rather than in JSX so pricing can be edited without touching
-layout. When adding a service, add the object **and** push it into
-`serviceList`.
+- **`servicesData.js`** — one key per service, each holding `headline`, `sub`,
+  `plans`, `faqs`, `tag`, `packagesTitle`, `faqTitle`, the CTA block, and
+  `navLabel` / `navDesc` for the navbar dropdown. `serviceList` exports them in
+  display order and drives the sub-page switcher, the 404 shortcuts, **and the
+  navbar dropdown** (which pairs each entry with an icon by slug), so a new
+  service only has to be added in one place.
+- **`coursesData.js`** — one key per bootcamp, holding `title`, `tag`,
+  `headline`, `sub`, `duration`, `startDate`, `mode`, and `curriculum[]`.
+  `courseList` exports them in display order and drives the `/courses` listing,
+  the course switcher tabs, **and the home-page Bootcamps cards** (which read
+  title/duration/description from here and keep only presentation extras — badge,
+  slots, price — in a local map).
+- **`site.js`** — `CONTACT` and `SOCIALS`, shared by the footer and `/contact`.
+
+Content lives here rather than in JSX so pricing and copy can be edited without
+touching layout. When adding a service or course, add the object **and** push it
+into the matching list.
 
 > Copy-paste hazard: these blocks are structurally identical, so a copy can
-> silently leave one service wearing another's `tag`, `headline`, `sub`, or
-> `faqTitle`. Check all five fields for every service you touch.
+> silently leave one entry wearing another's `tag`, `headline`, `sub`, or
+> `faqTitle` (this has happened — see git history). Check every field for each
+> entry you touch.
 
 ## Design system
 
@@ -146,10 +185,10 @@ need a colour, add a token rather than hardcoding it.
 
 ### Container widths
 
-| Class | Width | Used by |
-| --- | --- | --- |
-| `.shell` | 1128px | Every section, including the navbar |
-| `.shell-narrow` | 1120px | The footer only |
+| Class           | Width  | Used by                             |
+| --------------- | ------ | ----------------------------------- |
+| `.shell`        | 1128px | Every section, including the navbar |
+| `.shell-narrow` | 1120px | The footer only                     |
 
 > **Do not rename `.shell` to `.container`.** Tailwind 4 ships its own
 > `.container` utility in the `utilities` layer, which outranks the
@@ -199,8 +238,8 @@ import statements for them. The convention is a module-level object holding
 **Filenames with spaces must be URL-encoded** (`%20`):
 
 ```jsx
-src: '/case%20study%20img.png'   // correct
-src: '/case study img.png'       // 404
+src: '/case%20study%20img.png'; // correct
+src: '/case study img.png'; // 404
 ```
 
 Always supply real `width` and `height` to prevent layout shift.
@@ -227,34 +266,39 @@ them.
 
 ## Known gaps
 
-- **No test, lint, or CI setup.** Changes are verified by `npm run build` and
-  manual review only.
-- **`services-*.png` deletions are uncommitted.** They were committed in
-  `3f2d5e9` and then removed from the working tree, but the removal has not been
-  committed, so they are still in the repository.
+- **No test runner.** CI (`.github/workflows/ci.yml`) runs lint, format check,
+  and build, but there is no functional test coverage.
 - All four Portfolio entries are identical placeholder copy ("FastAI - AI Design
   website"), and all four point at the same image.
-- `Services` row 02 ("UI/UX Design") has `serviceHref: null` — there is no
-  `/services/ui-ux-design` page, so its panel renders without a pricing link
-  instead of duplicating row 04's destination. Either add the page or merge rows
-  02 and 04.
+- The `Services` accordion lists seven rows while there are six service pages:
+  rows 01–05 and 07 map to the six services, but **row 02 ("UI/UX Design") has
+  `serviceHref: null`** and overlaps row 06 ("UI/UX & Product Design"). Either
+  add a dedicated page or merge rows 02 and 06.
 - No Privacy Policy or Terms of Service. The footer links were removed rather
   than left pointing at `#privacy` / `#terms`, which resolved to nothing. Add
   them as real routes when the documents exist.
-- `/about`, `/courses` and `/portfolio` are placeholders — the real pages are
-  still to be written. See "Placeholder pages" above.
+- `/about` and `/portfolio` are placeholders — the real pages are still to be
+  written. See "Placeholder pages" above.
 - `/contact` has no enquiry form yet; it only lists contact details.
 - `LogoKodeio.svg` is unreferenced.
 - Bricolage Grotesque tops out at weight 800, so `font-black` (900) in the
   footer wordmark renders as 800.
 - Hero images total ~1.6 MB and are all `loading="eager"`; there is no preload on
   the LCP image.
+- SEO is limited to static `<meta>` tags in `index.html` plus a per-route
+  `document.title`; there is no canonical URL, sitemap, robots, or per-page
+  description.
 
-## Style drift
+## Code style
 
-Quote style is inconsistent: `src/components/Footer.jsx` uses double quotes
-while every other file uses single quotes. Something reformatted that one file —
-most likely an editor's format-on-save, which will keep reformatting it until
-the setting matches. There is no Prettier or ESLint config in the repo to make
-this deterministic. Adding one (`.prettierrc` with `singleQuote: true`) plus a
-`format` script would settle it; until then, match the file you are editing.
+Prettier owns formatting: `.prettierrc.json` sets `singleQuote: true`, `semi`,
+`printWidth: 100`, and `trailingComma: es5`. Run `npm run format` before
+committing; CI's `format:check` fails otherwise.
+
+ESLint (`eslint.config.js`, flat config) uses `@eslint/js` recommended,
+`eslint-plugin-react-hooks` (classic `rules-of-hooks` / `exhaustive-deps`), and
+`eslint-plugin-react-refresh`. The React Compiler rules shipped in
+`eslint-plugin-react-hooks` v7 (`react-hooks/refs`, `react-hooks/set-state-in-effect`)
+are turned **off** with a comment — they flag the established `useInView`
+pattern (a hook that returns a ref callers spread onto elements, and an observer
+that sets state after mount) as errors, and would produce ~21 false positives.

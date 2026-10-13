@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Clock, Calendar, Video, ChevronUp, ChevronDown, CheckCircle, ArrowRight } from 'lucide-react';
+import { Clock, Calendar, Video, ChevronUp, ArrowRight } from 'lucide-react';
 import { useInView } from '../hooks/useInView';
 import NotFound from './NotFound';
 import { coursesData, courseList } from '../data/coursesData';
@@ -204,7 +204,8 @@ export default function CourseDetailPage() {
                 Ready to Accelerate Your Career with Kodeio?
               </h2>
               <p className="mx-auto mb-8 max-w-[600px] text-[0.9375rem] leading-[1.75] text-body">
-                Join our next live cohort and learn directly from industry professionals with hands-on projects and career mentorship.
+                Join our next live cohort and learn directly from industry professionals with
+                hands-on projects and career mentorship.
               </p>
               <div className="flex flex-wrap items-center justify-center gap-4">
                 <Link

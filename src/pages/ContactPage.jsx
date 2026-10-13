@@ -85,7 +85,10 @@ export default function ContactPage() {
 
           <p className="mt-8 text-sm text-body">
             Or browse{' '}
-            <Link to="/services/web-development" className="font-semibold text-brand hover:underline">
+            <Link
+              to="/services/web-development"
+              className="font-semibold text-brand hover:underline"
+            >
               our services and pricing
             </Link>
             .

@@ -1,48 +1,43 @@
 import { Link } from 'react-router-dom';
 import { Clock, Users, Download } from 'lucide-react';
 import { useInView } from '../hooks/useInView';
+import { courseList } from '../data/coursesData';
 
-const courses = [
-  {
-    id: 'uiux',
-    slug: 'product-ui-ux-design',
+// Card title, duration and description come from coursesData (the single source
+// of truth for courses), so the home-page cards can never drift from the
+// /courses pages. Only the presentation extras that the course data has no
+// concept of live here, keyed by slug.
+const CARD_EXTRAS = {
+  'product-ui-ux-design': {
     status: 'Live Tech Bootcamps',
     statusType: 'active',
-    title: 'UI/UX Design Track',
-    duration: '12 Weeks',
     slots: '30 slots',
-    description:
-      'Learn how to design modern websites, mobile apps, and digital products through practical live classes, design challenges, and real client-style projects while leveraging on AI.',
     price: '₦20,000',
     btnVariant: 'primary',
   },
-  {
-    id: 'wordpress',
-    slug: 'wordpress-website-design',
+  'wordpress-website-design': {
     status: 'Coming soon',
     statusType: 'upcoming',
-    title: 'WordPress Development',
-    duration: '4 - 6 Weeks',
     slots: '30 slots',
-    description:
-      'Create business sites, portfolios, and stores with WordPress, no coding required. Setup, customization, plugins, themes, SEO basics, launch confidence.',
     price: '₦20,000',
     btnVariant: 'neutral',
   },
-  {
-    id: 'frontend',
-    slug: 'frontend-development',
+  'frontend-development': {
     status: 'Live Tech Bootcamps',
     statusType: 'active',
-    title: 'Frontend Development',
-    duration: '10 - 14 Weeks',
     slots: '30 slots',
-    description:
-      'Learn HTML, CSS, JavaScript, React, and modern workflows to build responsive websites. Responsive sites, React fundamentals, interactive interfaces, deployment.',
     price: '₦20,000',
     btnVariant: 'primary',
   },
-];
+};
+
+const courses = courseList.map((course) => ({
+  slug: course.slug,
+  title: course.title,
+  duration: course.duration,
+  description: course.sub,
+  ...CARD_EXTRAS[course.slug],
+}));
 
 export default function Bootcamps() {
   const head = useInView();
@@ -68,8 +63,8 @@ export default function Bootcamps() {
         >
           {courses.map((course) => (
             <div
-              key={course.id}
-              id={`course-${course.id}`}
+              key={course.slug}
+              id={`course-${course.slug}`}
               className="flex flex-col rounded-lg border border-line-soft bg-surface p-7 transition-all duration-200 hover:-translate-y-[3px] hover:border-line hover:shadow-lift"
             >
               <div className="mb-5">
@@ -88,10 +83,7 @@ export default function Bootcamps() {
               </div>
 
               <h3 className="mb-[0.65rem] font-display text-[1.15rem] font-bold text-ink">
-                <Link
-                  to={`/courses/${course.slug}`}
-                  className="hover:text-brand transition-colors"
-                >
+                <Link to={`/courses/${course.slug}`} className="hover:text-brand transition-colors">
                   {course.title}
                 </Link>
               </h3>
@@ -131,7 +123,10 @@ export default function Bootcamps() {
           ))}
         </div>
 
-        <div ref={bottom.ref} className="reveal mx-auto flex max-w-[680px] flex-col items-center text-center">
+        <div
+          ref={bottom.ref}
+          className="reveal mx-auto flex max-w-[680px] flex-col items-center text-center"
+        >
           <h3 className="mb-3 font-display text-[clamp(1.4rem,2.5vw,1.85rem)] font-bold text-ink">
             Start Your Journey Into Tech With Real Guidance
           </h3>

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 /* ========================================
    KODEIO — Design System (Tailwind v4)
@@ -42,9 +42,9 @@
   --color-accent-orange-edge: #fed7aa;
 
   /* Typography */
-  --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Bricolage Grotesque", "Roboto", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", "Fira Code", "Courier New", monospace;
+  --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Roboto', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
 
   /* Layout — 1128px is the widest content band measured in home.png (FAQ).
      This drives every section from the header down. The footer is the one
@@ -141,7 +141,6 @@
      outer figure already owns `transform` for the entrance bounce — two
      animations fighting over one property would clobber each other. */
   @keyframes hero-float {
-
     0%,
     100% {
       transform: translateY(0);
@@ -171,7 +170,6 @@
    BASE
    ======================================== */
 @layer base {
-
   *,
   *::before,
   *::after {
@@ -227,7 +225,6 @@
    COMPONENT PRIMITIVES
    ======================================== */
 @layer components {
-
   /* NAMED `.shell`, NOT `.container`: Tailwind v4 ships a built-in
      `.container` utility in the `utilities` layer, which outranks this
      `components` layer. Its responsive `max-width: 80rem` was silently
@@ -273,9 +270,11 @@
 
   /* Gradient-clipped text, used for the footer watermark */
   .text-gradient {
-    background-image: linear-gradient(180deg,
-        rgb(255 255 255 / 0.35) 0%,
-        rgb(255 255 255 / 0.05) 100%);
+    background-image: linear-gradient(
+      180deg,
+      rgb(255 255 255 / 0.35) 0%,
+      rgb(255 255 255 / 0.05) 100%
+    );
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -296,7 +295,7 @@
   }
 
   /* Staggered children */
-  .stagger>* {
+  .stagger > * {
     opacity: 0;
     transform: translateY(24px);
     transition:
@@ -304,37 +303,37 @@
       transform 0.5s ease;
   }
 
-  .stagger.reveal-visible>*:nth-child(1) {
+  .stagger.reveal-visible > *:nth-child(1) {
     opacity: 1;
     transform: none;
     transition-delay: 0s;
   }
 
-  .stagger.reveal-visible>*:nth-child(2) {
+  .stagger.reveal-visible > *:nth-child(2) {
     opacity: 1;
     transform: none;
     transition-delay: 0.1s;
   }
 
-  .stagger.reveal-visible>*:nth-child(3) {
+  .stagger.reveal-visible > *:nth-child(3) {
     opacity: 1;
     transform: none;
     transition-delay: 0.2s;
   }
 
-  .stagger.reveal-visible>*:nth-child(4) {
+  .stagger.reveal-visible > *:nth-child(4) {
     opacity: 1;
     transform: none;
     transition-delay: 0.3s;
   }
 
-  .stagger.reveal-visible>*:nth-child(5) {
+  .stagger.reveal-visible > *:nth-child(5) {
     opacity: 1;
     transform: none;
     transition-delay: 0.4s;
   }
 
-  .stagger.reveal-visible>*:nth-child(6) {
+  .stagger.reveal-visible > *:nth-child(6) {
     opacity: 1;
     transform: none;
     transition-delay: 0.5s;
@@ -343,7 +342,7 @@
   /* Catch-all for a 7th+ child. Lower specificity than the :nth-child rules
      above, so those still win — but without this a seventh card would stay at
      opacity:0 forever. */
-  .stagger.reveal-visible>* {
+  .stagger.reveal-visible > * {
     opacity: 1;
     transform: none;
     transition-delay: 0.6s;
@@ -355,18 +354,17 @@
    ======================================== */
 @layer utilities {
   @media (prefers-reduced-motion: reduce) {
-
     /* The float runs forever, so it is the first thing to cut for users who
        ask for reduced motion. Entrance bounces are left intact — they are
        short, one-shot, and part of the page-load reveal. */
-    [class*="animate-hero-float"] {
+    [class*='animate-hero-float'] {
       animation: none !important;
     }
 
     /* The headline word only cycles when the interval runs (Hero.jsx skips it
        under this preference), so this just suppresses the one-shot mount flip
        and shows the static word immediately. */
-    [class*="animate-word-flip"] {
+    [class*='animate-word-flip'] {
       animation: none !important;
     }
 
@@ -376,7 +374,7 @@
        and it would also mean content stays off-screen if the transition is
        ever suppressed entirely. */
     .reveal,
-    .stagger>* {
+    .stagger > * {
       transform: none;
       transition-duration: 0.01ms;
       transition-delay: 0s;

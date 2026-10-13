@@ -1,41 +1,34 @@
-import { useEffect } from "react";
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  Outlet,
-  useLocation,
-} from "react-router-dom";
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Services from "./components/Services";
-import Bootcamps from "./components/Bootcamps";
-import Portfolio from "./components/Portfolio";
-import FAQ from "./components/FAQ";
-import Footer from "./components/Footer";
-import ScrollToTop from "./components/ScrollToTop";
-import ServiceDetailPage from "./pages/ServiceDetailPage";
-import CourseDetailPage from "./pages/CourseDetailPage";
-import AboutPage from "./pages/AboutPage";
-import CoursesPage from "./pages/CoursesPage";
-import PortfolioPage from "./pages/PortfolioPage";
-import ContactPage from "./pages/ContactPage";
-import NotFound from "./pages/NotFound";
-import { servicesData } from "./data/servicesData";
-import { coursesData } from "./data/coursesData";
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import Hero from './components/Hero';
+import Services from './components/Services';
+import Bootcamps from './components/Bootcamps';
+import Portfolio from './components/Portfolio';
+import FAQ from './components/FAQ';
+import Footer from './components/Footer';
+import ScrollToTop from './components/ScrollToTop';
+import ServiceDetailPage from './pages/ServiceDetailPage';
+import CourseDetailPage from './pages/CourseDetailPage';
+import AboutPage from './pages/AboutPage';
+import CoursesPage from './pages/CoursesPage';
+import PortfolioPage from './pages/PortfolioPage';
+import ContactPage from './pages/ContactPage';
+import NotFound from './pages/NotFound';
+import { servicesData } from './data/servicesData';
+import { coursesData } from './data/coursesData';
 
-const DEFAULT_TITLE = "Kodeio Technologies - The Architecture of Innovation";
-const SERVICES_PREFIX = "/services/";
-const COURSES_PREFIX = "/courses/";
+const DEFAULT_TITLE = 'Kodeio Technologies - The Architecture of Innovation';
+const SERVICES_PREFIX = '/services/';
+const COURSES_PREFIX = '/courses/';
 
 // Titles for routes that are neither the home page nor a service page. Service
 // titles come from servicesData instead, so they can never drift from the data.
 const SECTION_TITLES = {
-  "/about": "About Us",
-  "/courses": "Courses",
-  "/portfolio": "Portfolio",
-  "/contact": "Contact Us",
+  '/about': 'About Us',
+  '/courses': 'Courses',
+  '/portfolio': 'Portfolio',
+  '/contact': 'Contact Us',
 };
 
 function HomePage() {
@@ -65,7 +58,7 @@ function Layout() {
   // `scroll-behavior: smooth` on <html>, which a bare scrollTo() would inherit
   // and animate — you would watch the page slide up on every route change.
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [pathname]);
 
   // Anchor targets are section ids that only exist on the home page. Resolving
@@ -78,9 +71,7 @@ function Layout() {
   // and anything that is not a valid CSS selector would throw.
   useEffect(() => {
     if (!hash) return;
-    document
-      .getElementById(hash.slice(1))
-      ?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
   }, [pathname, hash]);
 
   useEffect(() => {
@@ -119,10 +110,7 @@ export default function App() {
           <Route path="/courses/:courseId" element={<CourseDetailPage />} />
           <Route path="/portfolio" element={<PortfolioPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          <Route
-            path="/services"
-            element={<Navigate to="/services/web-development" replace />}
-          />
+          <Route path="/services" element={<Navigate to="/services/web-development" replace />} />
           <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
           <Route path="*" element={<NotFound />} />
         </Route>

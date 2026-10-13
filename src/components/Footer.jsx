@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { CONTACT, SOCIALS } from "../data/site";
+import { Link } from 'react-router-dom';
+import { CONTACT, SOCIALS } from '../data/site';
 
 // lucide-react v1 no longer ships brand icons, so the three social marks
 // stay as inline SVG (they were hand-drawn in the original markup anyway).
@@ -38,26 +38,26 @@ const brandIcons = {
 // page, so a bare hash would leave the link inert on every sub-page. Layout
 // resolves the hash once the home page has committed.
 const quickLinks = [
-  { label: "Home", to: "/" },
-  { label: "About Us", to: "/about" },
-  { label: "Services", to: "/services/web-development" },
-  { label: "Case Studies", to: "/portfolio" },
-  { label: "Bootcamps", to: "/courses" },
-  { label: "FAQ", to: "/#faq" },
-  { label: "Contact Us", to: "/contact" },
+  { label: 'Home', to: '/' },
+  { label: 'About Us', to: '/about' },
+  { label: 'Services', to: '/services/web-development' },
+  { label: 'Case Studies', to: '/portfolio' },
+  { label: 'Bootcamps', to: '/courses' },
+  { label: 'FAQ', to: '/#faq' },
+  { label: 'Contact Us', to: '/contact' },
 ];
 
 const forClients = [
-  { label: "Brand Identity Design", to: "/services/brand-identity" },
-  { label: "Website Development", to: "/services/web-development" },
-  { label: "Mobile App Design", to: "/services/mobile-app-design" },
-  { label: "E-Commerce Development", to: "/services/ecommerce" },
-  { label: "Case Studies", to: "/portfolio" },
+  { label: 'Brand Identity Design', to: '/services/brand-identity' },
+  { label: 'Website Development', to: '/services/web-development' },
+  { label: 'Mobile App Design', to: '/services/mobile-app-design' },
+  { label: 'E-Commerce Development', to: '/services/ecommerce' },
+  { label: 'Case Studies', to: '/portfolio' },
 ];
 
 const forLearners = [
-  { label: "Bootcamp", to: "/courses" },
-  { label: "Internship Opportunity", to: "/courses" },
+  { label: 'Bootcamp', to: '/courses' },
+  { label: 'Internship Opportunity', to: '/courses' },
 ];
 
 // Icons are keyed by the `label` in SOCIALS (src/data/site.js), which the
@@ -88,19 +88,12 @@ function LinkColumn({ heading, links }) {
 
 export default function Footer() {
   return (
-    <footer
-      id="contact"
-      className="relative overflow-hidden bg-brand pt-20 pb-8 text-white"
-    >
+    <footer id="contact" className="relative overflow-hidden bg-brand pt-20 pb-8 text-white">
       <div className="shell-narrow">
         <div className="mb-16 flex justify-between gap-14 max-[900px]:flex-col max-[900px]:gap-10">
           {/* Left Column: Brand */}
           <div className="flex max-w-[360px] flex-col">
-            <Link
-              to="/"
-              aria-label="Kodeio — home"
-              className="mb-5 inline-flex items-center"
-            >
+            <Link to="/" aria-label="Kodeio — home" className="mb-5 inline-flex items-center">
               {/* The source logo is purple + dark ink (built for a light background),
                   so it is recoloured to solid white to stay legible on the purple
                   footer. brightness-0 flattens every pixel to black, invert flips
@@ -114,11 +107,10 @@ export default function Footer() {
               />
             </Link>
             <p className="mb-7 text-[0.84rem] leading-[1.7] text-[#e9d5ff]">
-              Kodeio Technologies is a technology-driven ecosystem built at the
-              intersection of learning, innovation, and real-world product
-              development. We exist to cultivate a space where education is not
-              separate from practice, but deeply connected to it - where
-              learning and building converge to shape the digital future.
+              Kodeio Technologies is a technology-driven ecosystem built at the intersection of
+              learning, innovation, and real-world product development. We exist to cultivate a
+              space where education is not separate from practice, but deeply connected to it -
+              where learning and building converge to shape the digital future.
             </p>
             <div className="flex items-center gap-[0.65rem]">
               {socials.map(({ label, href }) => (
@@ -180,10 +172,7 @@ export default function Footer() {
             left pointing at #privacy / #terms, which resolve to nothing. Add
             them back as real routes once those documents exist. */}
         <div className="mb-4 border-t border-white/70 pt-6 text-xs text-[#e9d5ff]">
-          <p>
-            © {new Date().getFullYear()} Kodeio Technologies Ltd. All rights
-            reserved.
-          </p>
+          <p>© {new Date().getFullYear()} Kodeio Technologies Ltd. All rights reserved.</p>
         </div>
 
         {/* Giant KODEIO Watermark */}
