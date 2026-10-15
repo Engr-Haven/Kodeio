@@ -20,7 +20,7 @@ const coursesData = {
     duration: '8 Weeks',
     startDate: 'Starts 22nd of Aug 2026',
     mode: 'Live on Google Meet',
-    curriculumTitle: "What you'll be able to do this  after this Bootcamp",
+    curriculumTitle: "What you'll be able to do after this Bootcamp",
     curriculum: [
       {
         week: '01',
@@ -75,7 +75,7 @@ const coursesData = {
     duration: '6 Weeks',
     startDate: 'Starts 22nd of Aug 2026',
     mode: 'Live on Google Meet',
-    curriculumTitle: "What you'll be able to do this  after this Bootcamp",
+    curriculumTitle: "What you'll be able to do after this Bootcamp",
     curriculum: [
       {
         week: '01',
@@ -120,7 +120,7 @@ const coursesData = {
     duration: '12 Weeks',
     startDate: 'Starts 22nd of Aug 2026',
     mode: 'Live on Google Meet',
-    curriculumTitle: "What you'll be able to do this  after this Bootcamp",
+    curriculumTitle: "What you'll be able to do after this Bootcamp",
     curriculum: [
       {
         week: '01',
@@ -140,7 +140,7 @@ const coursesData = {
       {
         week: '04',
         title: 'Week 4: JavaScript Fundamentals',
-        desc: 'Add logic and interactivity to your websites..',
+        desc: 'Add logic and interactivity to your websites.',
       },
       {
         week: '05',
@@ -186,11 +186,11 @@ const coursesData = {
   },
 };
 
-// Aliases for flexible routing
-coursesData['uiux'] = coursesData['product-ui-ux-design'];
-coursesData['ui-ux'] = coursesData['product-ui-ux-design'];
-coursesData['wordpress'] = coursesData['wordpress-website-design'];
-coursesData['frontend'] = coursesData['frontend-development'];
+// Short slug aliases (uiux, wordpress, frontend, …) used to resolve here and
+// rendered the same course under a second, self-canonicalising URL — a
+// duplicate-content trap for search engines. Those short slugs are now 301
+// redirects to the canonical path at the host level, so only the keys defined
+// above should ever resolve a route.
 
 export { coursesData };
 export default coursesData;

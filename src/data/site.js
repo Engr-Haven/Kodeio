@@ -5,7 +5,7 @@
    ───────────────────────────────────────────────────────────── */
 
 export const CONTACT = {
-  email: 'hello@kodeio.com',
+  email: 'hello@kodeiotechnologies.com',
   phones: [
     { label: '+234 816 909 8986', href: 'tel:+2348169098986' },
     { label: '+234 816 940 5727', href: 'tel:+2348169405727' },

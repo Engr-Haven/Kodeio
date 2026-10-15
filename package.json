@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "prebuild": "node scripts/optimize-images.mjs",
+    "build": "vite build && node scripts/prerender.mjs && node scripts/verify-build.mjs",
+    "prerender": "node scripts/prerender.mjs",
+    "verify:build": "node scripts/verify-build.mjs",
+    "optimize:images": "node scripts/optimize-images.mjs",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -27,6 +31,7 @@
     "eslint-plugin-react-refresh": "^0.5.7",
     "globals": "^17.13.0",
     "prettier": "^3.9.10",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
     "vite": "^8.3.0"
   }

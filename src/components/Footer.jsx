@@ -66,7 +66,7 @@ const socials = SOCIALS;
 
 function LinkColumn({ heading, links }) {
   return (
-    <div className="flex flex-col">
+    <div className="flex min-w-0 flex-col">
       <h4 className="mb-[1.15rem] font-display text-sm font-bold tracking-[-0.01em] text-white">
         {heading}
       </h4>
@@ -128,19 +128,17 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* These four columns have to stay on one row. The column area is
-              ~656px and the headings plus longest link in each need ~471px,
-              so the gap has to fit in what is left: gap-16 (64px) came to
-              663px, overflowed by 7px and pushed Contact Info onto its own
-              row. gap-10 leaves ~65px of slack. Below 1080px four columns
-              genuinely cannot fit, so it becomes a 2x2 grid rather than
-              wrapping unpredictably. Keep .verify-footer-row.mjs honest if
-              you change either number. */}
-          <div className="flex flex-wrap gap-10 max-[1080px]:grid max-[1080px]:grid-cols-2 max-[1080px]:gap-8">
+          {/* These four columns must sit on one row beside the brand block, so
+              the row is plain `flex` (nowrap) rather than `flex-wrap`:
+              wrapping is exactly what used to drop Contact Info onto a second
+              line. The columns carry `min-w-0` so they can shrink and let
+              their text wrap instead of overflowing the row. Below 1080px the
+              brand stacks above and the four become a 2x2 grid. */}
+          <div className="flex gap-6 max-[1080px]:grid max-[1080px]:grid-cols-2 max-[1080px]:gap-8">
             <LinkColumn heading="Quick Links" links={quickLinks} />
             <LinkColumn heading="For Clients" links={forClients} />
             <LinkColumn heading="For Learners" links={forLearners} />
-            <div className="flex flex-col">
+            <div className="flex min-w-0 flex-col">
               <h4 className="mb-[1.15rem] font-display text-sm font-bold tracking-[-0.01em] text-white">
                 Contact Info
               </h4>
@@ -148,7 +146,7 @@ export default function Footer() {
                 <li>
                   <a
                     href={`mailto:${CONTACT.email}`}
-                    className="text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
+                    className="break-words text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
                   >
                     {CONTACT.email}
                   </a>

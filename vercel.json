@@ -1,3 +1,29 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/services/?", "status": 301, "headers": { "Location": "/services/web-development" } },
+    {
+      "src": "/courses/uiux/?",
+      "status": 301,
+      "headers": { "Location": "/courses/product-ui-ux-design" }
+    },
+    {
+      "src": "/courses/ui-ux/?",
+      "status": 301,
+      "headers": { "Location": "/courses/product-ui-ux-design" }
+    },
+    {
+      "src": "/courses/wordpress/?",
+      "status": 301,
+      "headers": { "Location": "/courses/wordpress-website-design" }
+    },
+    {
+      "src": "/courses/frontend/?",
+      "status": 301,
+      "headers": { "Location": "/courses/frontend-development" }
+    },
+    { "src": "/(.*)", "status": 404, "dest": "/404.html" }
+  ]
 }

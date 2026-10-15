@@ -1,1 +1,11 @@
-/*  /index.html  200
+# Netlify / Cloudflare Pages fallback (Hostinger uses public/.htaccess instead).
+#
+# Every real route is prerendered to its own index.html, so the host serves it as
+# a static file. Anything else is a genuine 404 rather than an SPA rewrite that
+# would answer 200 for unknown URLs (a "soft 404").
+/services             /services/web-development     301
+/courses/uiux         /courses/product-ui-ux-design 301
+/courses/ui-ux        /courses/product-ui-ux-design 301
+/courses/wordpress    /courses/wordpress-website-design 301
+/courses/frontend     /courses/frontend-development 301
+/*                    /404.html                     404

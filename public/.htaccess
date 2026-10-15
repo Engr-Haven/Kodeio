@@ -1,0 +1,40 @@
+# Kodeio — Apache config for Hostinger (copied verbatim into dist/ by Vite).
+#
+# Every real route is prerendered to its own directory with an index.html, so
+# Apache serves them as static files. Genuinely unknown URLs get a real HTTP
+# 404 (with dist/404.html), instead of the SPA fallback that would return 200
+# for everything and show Google a soft-404.
+
+Options -MultiViews -Indexes
+DirectoryIndex index.html
+
+# Serve /about for /about/ (and vice versa) without a redirect.
+DirectorySlash Off
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # /services has no page of its own — send it to the default service.
+  RewriteRule ^services/?$ /services/web-development [R=301,L]
+
+  # Retired short course slugs -> canonical URLs, so any old/guessed links
+  # consolidate instead of rendering duplicate pages.
+  RewriteRule ^courses/uiux/?$ /courses/product-ui-ux-design [R=301,L]
+  RewriteRule ^courses/ui-ux/?$ /courses/product-ui-ux-design [R=301,L]
+  RewriteRule ^courses/wordpress/?$ /courses/wordpress-website-design [R=301,L]
+  RewriteRule ^courses/frontend/?$ /courses/frontend-development [R=301,L]
+
+  # Real files (assets, robots.txt, sitemap.xml, 404.html, ...) are served as-is.
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # Pretty URLs for prerendered routes: /about -> /about/index.html
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.*)$ $1/index.html [L]
+
+  # Anything left does not exist: return a real 404 (served as /404.html).
+  RewriteRule ^ - [R=404,L]
+</IfModule>
+
+ErrorDocument 404 /404.html

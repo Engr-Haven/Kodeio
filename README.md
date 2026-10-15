@@ -23,13 +23,22 @@ No state library, no CSS-in-JS, and no test runner. Developed against Node 22.x.
 
 ```bash
 npm install
-npm run dev          # dev server with HMR
-npm run build        # production build -> dist/
-npm run preview      # serve the built output locally
-npm run lint         # ESLint
-npm run format       # Prettier --write
-npm run format:check # Prettier --check (used in CI)
+npm run dev            # dev server with HMR
+npm run build          # optimize images -> vite build -> prerender -> verify -> dist/
+npm run preview        # serve the built output locally
+npm run optimize:images # regenerate WebP + og-default.png only
+npm run prerender      # re-run the prerender step only (dist/ must exist)
+npm run verify:build   # re-run the post-build checks only (dist/ must exist)
+npm run lint           # ESLint
+npm run format         # Prettier --write
+npm run format:check   # Prettier --check (used in CI)
 ```
+
+`npm run build` runs four steps: `prebuild` optimizes images
+(`scripts/optimize-images.mjs`), then `vite build`, then
+`scripts/prerender.mjs`, then `scripts/verify-build.mjs`, which fails the build
+if any prerendered page is missing its title, description, canonical, JSON-LD or
+rendered markup (see [SEO & prerendering](#seo--prerendering)).
 
 `dist/` is generated — don't edit anything in it by hand.
 
@@ -37,20 +46,71 @@ npm run format:check # Prettier --check (used in CI)
 
 `.github/workflows/ci.yml` runs `npm ci`, `npm run lint`,
 `npm run format:check`, and `npm run build` on every push to `master` and on
-every pull request. There is still no test runner; the build is the only
-functional check.
+every pull request. There is still no test runner, but the build now ends in
+`scripts/verify-build.mjs`, so a broken prerender or SEO regression fails CI
+instead of shipping silently.
 
-### Hosting (SPA rewrites)
+### Hosting (prerendered static site)
 
-This is a client-side-routed SPA, so the host must rewrite unknown paths to
-`index.html` or a refresh on a deep link (`/services/web-development`) will 404. Two configs are checked in for the common hosts — only the one matching
-your host is read:
+`npm run build` prerenders every route to a real HTML file, so each URL is
+served as static content and no SPA rewrite to `index.html` is needed. Unknown
+URLs should return a genuine 404 (`dist/404.html`) instead of the HTTP 200
+"soft 404" that an SPA fallback produces. Configs are checked in per host —
+only the one matching your host is read:
 
-- `public/_redirects` — Netlify, Cloudflare Pages (`/* /index.html 200`).
-- `vercel.json` — Vercel (`rewrites`).
+- **Hostinger (Apache)** — `public/.htaccess`, copied into `dist/`. Serves the
+  prerendered route directories and answers anything else with `404.html` + a
+  real 404 status. This is the production host.
+- `public/_redirects` — Netlify / Cloudflare Pages equivalent.
+- `vercel.json` — Vercel equivalent (filesystem handle, then 404).
 
-For any other host (nginx, GitHub Pages, S3), configure the equivalent
-fallback by hand.
+For any other host (nginx, S3), replicate the same behaviour: serve existing
+files, then return 404 rather than rewriting everything to `index.html`.
+
+## SEO & prerendering
+
+The site is a client-side SPA, which on its own ships an empty
+`<div id="root">` to crawlers. `scripts/prerender.mjs` fixes that: after
+`vite build` it renders every route to HTML and writes a static file per route,
+so each URL ships real markup plus its own `<head>`.
+
+**One source of truth for routes.** `src/seo/pages.js` declares every static
+page (path + title + description) once. `src/seo/routes.js` derives the
+prerender/sitemap list from it (plus one entry per service and course), and
+`src/App.jsx` maps those paths to components. Adding a static page is a one-file
+change (`pages.js`) plus its component in the `PAGE_COMPONENTS` map.
+
+**One source of truth for metadata.** `src/seo/seo.js` (`getSeo(pathname)`)
+derives the title, description, canonical URL, robots directive and a JSON-LD
+graph (Organization, WebSite, Service + AggregateOffer, Course, FAQPage)
+entirely from `src/data/*`. It is used by both:
+
+- `src/entry-server.jsx` — renders the route tree through a `StaticRouter` at
+  build time; `src/seo/head.js` serialises the tags into each HTML file.
+- `src/components/Seo.jsx` — applies the same values on the client for SPA
+  navigations and the dev server (updating tags in place, not appending).
+
+So page metadata can never drift between the static HTML and the running app.
+The prerender is **not hydrated** — `src/main.jsx` still uses `createRoot`, which
+replaces the static markup on load.
+
+**Files emitted into `dist/`:** one `index.html` per route, `404.html`,
+`sitemap.xml` and `robots.txt` (both generated from `src/seo/routes.js`, so a new
+service/course is listed automatically). `scripts/verify-build.mjs` then checks
+all of them, and `npm run build` fails if any is wrong.
+
+**Retired course slugs** (`/courses/uiux`, `/courses/ui-ux`,
+`/courses/wordpress`, `/courses/frontend`) are 301-redirected to their canonical
+course at the host level, so they never render a duplicate page.
+
+**Changing the domain:** set `VITE_SITE_URL` in `.env` (default
+`https://kodeiotechnologies.com`). Everything absolute — canonical tags,
+`og:url`, the sitemap, JSON-LD — is built from it.
+
+**Images:** `scripts/optimize-images.mjs` (the `prebuild` step, needs `sharp`)
+emits WebP siblings into `public/optimized/` and a 1200×630 `og-default.png`.
+`Hero` and `Portfolio` reference them through `<picture>` with the PNG as
+fallback; the largest hero image is preloaded from `index.html`.
 
 ## Routes
 
@@ -270,10 +330,6 @@ them.
   and build, but there is no functional test coverage.
 - All four Portfolio entries are identical placeholder copy ("FastAI - AI Design
   website"), and all four point at the same image.
-- The `Services` accordion lists seven rows while there are six service pages:
-  rows 01–05 and 07 map to the six services, but **row 02 ("UI/UX Design") has
-  `serviceHref: null`** and overlaps row 06 ("UI/UX & Product Design"). Either
-  add a dedicated page or merge rows 02 and 06.
 - No Privacy Policy or Terms of Service. The footer links were removed rather
   than left pointing at `#privacy` / `#terms`, which resolved to nothing. Add
   them as real routes when the documents exist.
@@ -283,11 +339,14 @@ them.
 - `LogoKodeio.svg` is unreferenced.
 - Bricolage Grotesque tops out at weight 800, so `font-black` (900) in the
   footer wordmark renders as 800.
-- Hero images total ~1.6 MB and are all `loading="eager"`; there is no preload on
-  the LCP image.
-- SEO is limited to static `<meta>` tags in `index.html` plus a per-route
-  `document.title`; there is no canonical URL, sitemap, robots, or per-page
-  description.
+- Hero images are all `loading="eager"`; only the largest is preloaded and
+  hinted with `fetchpriority="high"`. WebP output drops the set from ~1.6 MB to
+  ~360 KB, but the untouched PNG fallbacks are still shipped for old browsers.
+- SEO structure is in place (prerendered HTML, per-route title/description/
+  canonical, Open Graph/Twitter, sitemap, robots, JSON-LD). What still limits
+  ranking is **content**, not plumbing: `/about` and `/portfolio` are
+  placeholders, the four Portfolio cards are identical, and the FAQ/service copy
+  is thin. Enrich those before expecting competitive positions.
 
 ## Code style
 

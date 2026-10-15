@@ -8,6 +8,8 @@ import Portfolio from './components/Portfolio';
 import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import ScrollToTop from './components/ScrollToTop';
+import Seo from './components/Seo';
+import { staticRoutes } from './seo/routes';
 import ServiceDetailPage from './pages/ServiceDetailPage';
 import CourseDetailPage from './pages/CourseDetailPage';
 import AboutPage from './pages/AboutPage';
@@ -15,21 +17,6 @@ import CoursesPage from './pages/CoursesPage';
 import PortfolioPage from './pages/PortfolioPage';
 import ContactPage from './pages/ContactPage';
 import NotFound from './pages/NotFound';
-import { servicesData } from './data/servicesData';
-import { coursesData } from './data/coursesData';
-
-const DEFAULT_TITLE = 'Kodeio Technologies - The Architecture of Innovation';
-const SERVICES_PREFIX = '/services/';
-const COURSES_PREFIX = '/courses/';
-
-// Titles for routes that are neither the home page nor a service page. Service
-// titles come from servicesData instead, so they can never drift from the data.
-const SECTION_TITLES = {
-  '/about': 'About Us',
-  '/courses': 'Courses',
-  '/portfolio': 'Portfolio',
-  '/contact': 'Contact Us',
-};
 
 function HomePage() {
   return (
@@ -44,12 +31,13 @@ function HomePage() {
 }
 
 /**
- * Chrome shared by every route. It also owns the two pieces of per-route state
- * that must not survive a navigation: the scroll offset and the document title.
- * Centralising them here means a new page cannot forget to reset either.
+ * Chrome shared by every route. It also owns the one piece of per-route state
+ * that must not survive a navigation: the scroll offset.
  *
  * ScrollToTop lives here too, so the back-to-top control exists on every route
- * without each page having to render it.
+ * without each page having to render it. Document metadata (title, description,
+ * canonical, Open Graph, JSON-LD) is owned by <Seo /> — see src/seo/ for the
+ * single source of truth shared with the prerender step.
  */
 function Layout() {
   const { pathname, hash } = useLocation();
@@ -74,23 +62,9 @@ function Layout() {
     document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: 'smooth' });
   }, [pathname, hash]);
 
-  useEffect(() => {
-    let label = null;
-    if (pathname.startsWith(SERVICES_PREFIX)) {
-      const slug = pathname.slice(SERVICES_PREFIX.length);
-      label = servicesData[slug]?.title;
-    } else if (pathname.startsWith(COURSES_PREFIX)) {
-      const slug = pathname.slice(COURSES_PREFIX.length);
-      label = coursesData[slug]?.title;
-    }
-    if (!label) {
-      label = SECTION_TITLES[pathname];
-    }
-    document.title = label ? `${label} | Kodeio Technologies` : DEFAULT_TITLE;
-  }, [pathname]);
-
   return (
     <>
+      <Seo />
       <Navbar />
       <Outlet />
       <Footer />
@@ -99,22 +73,43 @@ function Layout() {
   );
 }
 
+/* Static path -> component. The paths themselves come from src/seo/pages.js
+   (the one list shared with the SEO resolver and the prerender step), so only
+   the component wiring lives here. */
+const PAGE_COMPONENTS = {
+  '/': HomePage,
+  '/about': AboutPage,
+  '/courses': CoursesPage,
+  '/portfolio': PortfolioPage,
+  '/contact': ContactPage,
+};
+
+/**
+ * The route table, exported separately from `App` so the prerender step
+ * (scripts/prerender.mjs, via src/entry-server.jsx) can render the exact same
+ * tree through a StaticRouter.
+ */
+export function AppRoutes() {
+  return (
+    <Routes>
+      <Route element={<Layout />}>
+        {staticRoutes.map((path) => {
+          const Page = PAGE_COMPONENTS[path];
+          return <Route key={path} path={path} element={<Page />} />;
+        })}
+        <Route path="/courses/:courseId" element={<CourseDetailPage />} />
+        <Route path="/services" element={<Navigate to="/services/web-development" replace />} />
+        <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/courses" element={<CoursesPage />} />
-          <Route path="/courses/:courseId" element={<CourseDetailPage />} />
-          <Route path="/portfolio" element={<PortfolioPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/services" element={<Navigate to="/services/web-development" replace />} />
-          <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
-          <Route path="*" element={<NotFound />} />
-        </Route>
-      </Routes>
+      <AppRoutes />
     </BrowserRouter>
   );
 }

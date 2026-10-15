@@ -300,13 +300,20 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile dropdown menu */}
+      {/* Mobile dropdown menu.
+          When closed it is `invisible` (visibility: hidden), not merely
+          collapsed: a max-h-0 + overflow-hidden panel still leaves its links in
+          the tab order and the accessibility tree, so keyboard users would tab
+          into an unseen menu. visibility:hidden removes them from both, and
+          because `transition-all` covers visibility it still animates
+          (visible immediately on open, hidden only once the collapse ends). */}
       <div
         id="nav-mobile-menu"
+        aria-hidden={!menuOpen}
         className={`flex flex-col gap-1 overflow-y-auto bg-white px-5 transition-all duration-300 lg:hidden ${
           menuOpen
-            ? 'max-h-[85vh] border-t border-line pt-3 pb-6 shadow-xl'
-            : 'max-h-0 border-t-0 pt-0 pb-0 overflow-hidden'
+            ? 'visible max-h-[85vh] border-t border-line pt-3 pb-6 shadow-xl'
+            : 'invisible max-h-0 border-t-0 pt-0 pb-0 overflow-hidden'
         }`}
       >
         {/* Mobile Services Accordion */}
