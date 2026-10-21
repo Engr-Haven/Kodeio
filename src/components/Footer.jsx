@@ -67,9 +67,14 @@ const socials = SOCIALS;
 function LinkColumn({ heading, links }) {
   return (
     <div className="flex min-w-0 flex-col">
-      <h4 className="mb-[1.15rem] font-display text-sm font-bold tracking-[-0.01em] text-white">
+      {/* A plain label, not a heading: these four group titles sit in the
+          footer on every page, and as headings they produced a level skip
+          (h1 -> h4, h2 -> h4) on most routes. The <ul> below already gives
+          the group its structure, and the wrapping <nav> gives screen-reader
+          users a landmark for the whole column. */}
+      <p className="mb-[1.15rem] font-display text-sm font-bold tracking-[-0.01em] text-white">
         {heading}
-      </h4>
+      </p>
       <ul className="flex flex-col gap-[0.65rem]">
         {links.map((link) => (
           <li key={link.label}>
@@ -134,14 +139,17 @@ export default function Footer() {
               line. The columns carry `min-w-0` so they can shrink and let
               their text wrap instead of overflowing the row. Below 1080px the
               brand stacks above and the four become a 2x2 grid. */}
-          <div className="flex gap-6 max-[1080px]:grid max-[1080px]:grid-cols-2 max-[1080px]:gap-8">
+          <nav
+            aria-label="Footer"
+            className="flex gap-6 max-[1080px]:grid max-[1080px]:grid-cols-2 max-[1080px]:gap-8"
+          >
             <LinkColumn heading="Quick Links" links={quickLinks} />
             <LinkColumn heading="For Clients" links={forClients} />
             <LinkColumn heading="For Learners" links={forLearners} />
             <div className="flex min-w-0 flex-col">
-              <h4 className="mb-[1.15rem] font-display text-sm font-bold tracking-[-0.01em] text-white">
+              <p className="mb-[1.15rem] font-display text-sm font-bold tracking-[-0.01em] text-white">
                 Contact Info
-              </h4>
+              </p>
               <ul className="flex flex-col gap-[0.65rem]">
                 <li>
                   <a
@@ -149,6 +157,14 @@ export default function Footer() {
                     className="break-words text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
                   >
                     {CONTACT.email}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:kodeio.it@gmail.com`}
+                    className="break-words text-[0.8125rem] text-[#e9d5ff] transition-colors duration-200 hover:text-white"
+                  >
+                    kodeio.it@gmail.com
                   </a>
                 </li>
                 {CONTACT.phones.map((phone) => (
@@ -163,7 +179,7 @@ export default function Footer() {
                 ))}
               </ul>
             </div>
-          </div>
+          </nav>
         </div>
 
         {/* Legal links (Privacy Policy, Terms of Service) were removed rather than

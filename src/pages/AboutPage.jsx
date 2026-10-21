@@ -1,39 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { ChevronDown, ArrowRight, Target, Eye, PhoneCall } from 'lucide-react';
-import { useInView } from '../hooks/useInView';
-
-/* ─── motion helpers ──────────────────────────────────────────────────────── */
-
-/* Wraps a block in the site's standard scroll-reveal: the element carries
-   `.reveal` (opacity 0 -> 1) and the observer adds `reveal-visible` on the
-   first entry into view. Same contract the home-page sections use. */
-function Reveal({ children, className = '', delay = 0 }) {
-  const { ref } = useInView(0.12);
-  return (
-    <div
-      ref={ref}
-      className={`reveal ${className}`}
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
-    >
-      {children}
-    </div>
-  );
-}
-
-/* `.stagger` hides its children until the container gets `reveal-visible`, so
-   the container itself needs the observer ref — without it the whole grid
-   stays at opacity 0. The container is deliberately NOT `.reveal`: the children
-   already carry the offset, and stacking `.reveal` on the container as well
-   would double the travel. This mirrors Portfolio.jsx. */
-function Stagger({ children, className = '' }) {
-  const { ref } = useInView(0.12);
-  return (
-    <div ref={ref} className={`stagger ${className}`}>
-      {children}
-    </div>
-  );
-}
+import { Reveal, Stagger } from '../components/Reveal';
 
 /* ─── shared primitives ───────────────────────────────────────────────────── */
 
@@ -315,7 +283,7 @@ export default function AboutPage() {
                 <PhoneCall size={15} strokeWidth={2.2} />
                 <span>Book a Call</span>
               </Link>
-              <Link to="/#courses" className={BTN_OUTLINE}>
+              <Link to="/courses" className={BTN_OUTLINE}>
                 <span>Explore Courses</span>
                 <ArrowRight size={15} strokeWidth={2.2} />
               </Link>

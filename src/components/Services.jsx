@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChevronDown, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { useInView } from '../hooks/useInView';
+import { Reveal } from './Reveal';
 
 // Each row links to its route on /services. `serviceHref: null` means the row
 // has no dedicated pricing page yet, and its panel renders without the
@@ -62,14 +62,11 @@ const services = [
 
 export default function Services() {
   const [openIndex, setOpenIndex] = useState(-1);
-  const head = useInView();
-  const list = useInView();
-
   return (
     <section id="services" className="bg-white pt-20 pb-24">
       <div className="shell">
         {/* ── Heading + "View All" link ── */}
-        <div ref={head.ref} className="reveal mb-10 flex flex-wrap items-end justify-between gap-4">
+        <Reveal className="mb-10 flex flex-wrap items-end justify-between gap-4">
           <div>
             <span className="mb-[0.35rem] block text-sm font-medium text-body">Our Services</span>
             <h2 className="font-display text-[clamp(2rem,3.5vw,2.75rem)] font-extrabold tracking-[-0.02em] text-ink">
@@ -83,10 +80,10 @@ export default function Services() {
             View All Services
             <ArrowRight size={14} strokeWidth={2} />
           </Link>
-        </div>
+        </Reveal>
 
         {/* ── Accordion list ── */}
-        <div ref={list.ref} className="reveal flex flex-col gap-[0.85rem]">
+        <Reveal className="flex flex-col gap-[0.85rem]">
           {services.map((svc, i) => (
             <div
               key={svc.number}
@@ -140,7 +137,7 @@ export default function Services() {
               )}
             </div>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -23,7 +23,7 @@ import {
 import { CONTACT, SOCIALS } from '../data/site';
 import { serviceList } from '../data/servicesData';
 import { courseList } from '../data/coursesData';
-import { useInView } from '../hooks/useInView';
+import { Reveal, Stagger } from '../components/Reveal';
 
 /**
  * ContactPage
@@ -188,12 +188,6 @@ function Field({ id, label, error, required = false, children }) {
 /* ── page ──────────────────────────────────────────────────────────────────── */
 
 export default function ContactPage() {
-  const hero = useInView(0.1);
-  const formSection = useInView(0.05);
-  const prices = useInView(0.05);
-  const audiences = useInView(0.05);
-  const closing = useInView(0.1);
-
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState(null); // { kind, message }
 
@@ -279,7 +273,7 @@ export default function ContactPage() {
         />
 
         <div className="shell">
-          <div ref={hero.ref} className="reveal mx-auto max-w-[780px]">
+          <Reveal threshold={0.1} className="mx-auto max-w-[780px]">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line-soft bg-surface-2 px-4 py-1.5 text-xs font-semibold text-body shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               <span>Get in Touch</span>
@@ -326,14 +320,14 @@ export default function ContactPage() {
                 </span>
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Enquiry form + direct contact rail ── */}
       <section id="enquiry" className="border-t border-line-soft bg-surface/40 py-20">
         <div className="shell">
-          <div ref={formSection.ref} className="reveal mx-auto mb-12 max-w-[700px] text-center">
+          <Reveal threshold={0.05} className="mx-auto mb-12 max-w-[700px] text-center">
             <h2 className="mb-3 font-display text-[clamp(1.7rem,3.2vw,2.4rem)] font-extrabold leading-[1.15] tracking-[-0.02em] text-ink">
               Tell us about the project
             </h2>
@@ -341,7 +335,7 @@ export default function ContactPage() {
               The more you can share, the more useful our first reply can be. Nothing here is
               required except a name, an email, and a line about what you are building.
             </p>
-          </div>
+          </Reveal>
 
           <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-10">
             {/* ── The form ── */}
@@ -498,6 +492,7 @@ export default function ContactPage() {
 
               <label className="mt-5 flex cursor-pointer items-start gap-3 text-[0.8125rem] leading-[1.6] text-body">
                 <input
+                  id="contact-updates"
                   type="checkbox"
                   name="updates"
                   value="yes"
@@ -571,6 +566,16 @@ export default function ContactPage() {
                       {CONTACT.email}
                     </a>
                   </li>
+
+                  <li>
+                    <a
+                      href={`mailto:kodeio.it@gmail.com`}
+                      className="flex items-center gap-2.5 break-all text-[0.9375rem] font-semibold text-ink transition-colors duration-200 hover:text-brand"
+                    >
+                      <Mail size={15} strokeWidth={2} className="shrink-0 text-brand" />
+                      kodeio.it@gmail.com
+                    </a>
+                  </li>
                 </ul>
 
                 <div className="mt-5 flex flex-wrap gap-2.5 border-t border-line-soft pt-5">
@@ -634,7 +639,7 @@ export default function ContactPage() {
       {/* ── Starting prices ── */}
       <section id="pricing" className="bg-white py-20">
         <div className="shell">
-          <div ref={prices.ref} className="reveal mx-auto mb-10 max-w-[700px] text-center">
+          <Reveal threshold={0.05} className="mx-auto mb-10 max-w-[700px] text-center">
             <h2 className="mb-3 font-display text-[clamp(1.7rem,3.2vw,2.4rem)] font-extrabold leading-[1.15] tracking-[-0.02em] text-ink">
               What it costs to get started
             </h2>
@@ -642,9 +647,9 @@ export default function ContactPage() {
               Straight from the price list &mdash; these are the entry prices. Select a service to
               see all three tiers.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="reveal mx-auto max-w-[820px]">
+          <Reveal threshold={0.05} className="mx-auto max-w-[820px]">
             <ul className="grid gap-x-10 gap-y-2 md:grid-cols-2">
               {STARTING_PRICES.map((item) => (
                 <li key={item.id}>
@@ -667,14 +672,14 @@ export default function ContactPage() {
               Reply within 8 working hours. Once scope and price are agreed we kick off &mdash;
               usually within 3 to 5 business days.
             </p>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Two audiences ── */}
       <section className="border-t border-line-soft bg-surface/40 py-20">
         <div className="shell">
-          <div ref={audiences.ref} className="reveal mx-auto mb-12 max-w-[700px] text-center">
+          <Reveal threshold={0.05} className="mx-auto mb-12 max-w-[700px] text-center">
             <h2 className="mb-3 font-display text-[clamp(1.7rem,3.2vw,2.4rem)] font-extrabold leading-[1.15] tracking-[-0.02em] text-ink">
               Work with us, or learn from us
             </h2>
@@ -682,9 +687,9 @@ export default function ContactPage() {
               Most people arrive here for one of these. If you are not sure which, that is what the
               call is for.
             </p>
-          </div>
+          </Reveal>
 
-          <div className="stagger grid gap-6 md:grid-cols-2">
+          <Stagger className="grid gap-6 md:grid-cols-2">
             {AUDIENCES.map((item) => {
               const Icon = item.Icon;
               return (
@@ -716,16 +721,16 @@ export default function ContactPage() {
                 </div>
               );
             })}
-          </div>
+          </Stagger>
         </div>
       </section>
 
       {/* ── Closing CTA ── */}
       <section className="bg-white pb-24 pt-20">
         <div className="shell">
-          <div
-            ref={closing.ref}
-            className="reveal mx-auto max-w-[820px] rounded-3xl border border-brand/15 bg-gradient-to-b from-banner-top to-banner-bottom px-8 py-12 text-center"
+          <Reveal
+            threshold={0.1}
+            className="mx-auto max-w-[820px] rounded-3xl border border-brand/15 bg-gradient-to-b from-banner-top to-banner-bottom px-8 py-12 text-center"
           >
             <h2 className="mb-4 font-display text-[clamp(1.3rem,2.8vw,1.75rem)] font-bold text-ink">
               Let&rsquo;s talk about your project
@@ -751,7 +756,7 @@ export default function ContactPage() {
                 <ArrowRight size={15} strokeWidth={2.2} />
               </Link>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </main>

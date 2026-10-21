@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import { useInView } from '../hooks/useInView';
+import { Reveal, Stagger } from './Reveal';
 
 // Swap the `image` value on any card to use a different screenshot.
 // Files are served from the /public folder. Spaces must be URL-encoded as %20.
@@ -43,13 +43,10 @@ const projects = [
 ];
 
 export default function Portfolio() {
-  const head = useInView();
-  const grid = useInView(0.05);
-
   return (
     <section id="portfolio" className="bg-white pt-20 pb-24">
       <div className="shell">
-        <div ref={head.ref} className="reveal mb-12 flex flex-wrap items-end justify-between gap-8">
+        <Reveal className="mb-12 flex flex-wrap items-end justify-between gap-8">
           <div className="max-w-[600px]">
             <h2 className="mb-2 font-display text-[clamp(2rem,3.5vw,2.75rem)] font-extrabold tracking-[-0.02em] text-ink">
               What We&apos;ve Built
@@ -67,9 +64,9 @@ export default function Portfolio() {
             View All Projects
             <ArrowRight size={14} strokeWidth={2} />
           </a>
-        </div>
+        </Reveal>
 
-        <div ref={grid.ref} className="stagger grid grid-cols-2 gap-8 max-[800px]:grid-cols-1">
+        <Stagger className="grid grid-cols-2 gap-8 max-[800px]:grid-cols-1">
           {projects.map((proj) => (
             <div
               key={proj.id}
@@ -100,7 +97,7 @@ export default function Portfolio() {
               </div>
             </div>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );

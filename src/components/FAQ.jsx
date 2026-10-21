@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ChevronDown, ArrowRight } from 'lucide-react';
-import { useInView } from '../hooks/useInView';
+import { Reveal } from './Reveal';
 import { clientFaqs, learnerFaqs } from '../data/faqsData';
 
 const tabs = [
@@ -11,9 +11,6 @@ const tabs = [
 export default function FAQ() {
   const [activeTab, setActiveTab] = useState('clients');
   const [openIndex, setOpenIndex] = useState(-1);
-  const head = useInView();
-  const list = useInView();
-
   const faqs = activeTab === 'clients' ? clientFaqs : learnerFaqs;
 
   return (
@@ -22,7 +19,7 @@ export default function FAQ() {
         {/* Heading block is left-anchored at 720px, but the tab toggle below
             it must centre on the PAGE — so it sits outside that 720px
             constraint, as a sibling spanning the full shell width. */}
-        <div ref={head.ref} className="reveal mb-12">
+        <Reveal className="mb-12">
           <div className="mb-8 max-w-[720px]">
             <h2 className="mb-[0.85rem] font-display text-[clamp(2rem,3.5vw,2.75rem)] font-extrabold tracking-[-0.02em] text-ink">
               Frequently Asked Questions
@@ -56,9 +53,9 @@ export default function FAQ() {
               ))}
             </div>
           </div>
-        </div>
+        </Reveal>
 
-        <div ref={list.ref} className="reveal mx-auto mb-12 flex max-w-[820px] flex-col gap-3">
+        <Reveal className="mx-auto mb-12 flex max-w-[820px] flex-col gap-3">
           {faqs.map((faq, i) => (
             <div
               key={faq.question}
@@ -93,7 +90,7 @@ export default function FAQ() {
               )}
             </div>
           ))}
-        </div>
+        </Reveal>
 
         <div className="flex justify-center">
           <a

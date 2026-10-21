@@ -1,13 +1,9 @@
 import { Link } from 'react-router-dom';
 import { Calendar, Video, ArrowRight, Download, Sparkles } from 'lucide-react';
-import { useInView } from '../hooks/useInView';
+import { Reveal } from '../components/Reveal';
 import { courseList } from '../data/coursesData';
 
 export default function CoursesPage() {
-  const heroRef = useInView(0.1);
-  const cardsRef = useInView(0.05);
-  const bottomRef = useInView(0.1);
-
   return (
     <main className="min-h-screen bg-white">
       {/* ── Courses Page Hero ── */}
@@ -19,7 +15,7 @@ export default function CoursesPage() {
         />
 
         <div className="shell">
-          <div ref={heroRef.ref} className="reveal mx-auto max-w-[760px]">
+          <Reveal threshold={0.1} className="mx-auto max-w-[760px]">
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-line-soft bg-surface-2 px-4 py-1.5 text-xs font-semibold text-body shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               <span>Live Tech Bootcamps</span>
@@ -33,16 +29,16 @@ export default function CoursesPage() {
               Courses are designed to help students build real-world projects, gain industry-ready
               skills, grow strong portfolios, and access internship opportunities.
             </p>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Courses Cards Grid ── */}
       <section className="py-12 bg-surface/40 border-t border-line-soft">
         <div className="shell">
-          <div
-            ref={cardsRef.ref}
-            className="reveal grid grid-cols-3 gap-7 max-[960px]:grid-cols-1 max-[960px]:max-w-[540px] max-[960px]:mx-auto"
+          <Reveal
+            threshold={0.05}
+            className="grid grid-cols-3 gap-7 max-[960px]:grid-cols-1 max-[960px]:max-w-[540px] max-[960px]:mx-auto"
           >
             {courseList.map((course) => (
               <div
@@ -121,16 +117,16 @@ export default function CoursesPage() {
                 </div>
               </div>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Bottom Call To Action ── */}
       <section className="py-20 bg-white">
         <div className="shell">
-          <div
-            ref={bottomRef.ref}
-            className="reveal mx-auto flex max-w-[680px] flex-col items-center text-center"
+          <Reveal
+            threshold={0.1}
+            className="mx-auto flex max-w-[680px] flex-col items-center text-center"
           >
             <h3 className="mb-3 font-display text-[clamp(1.4rem,2.5vw,1.85rem)] font-bold text-ink">
               Start Your Journey Into Tech With Real Guidance
@@ -147,7 +143,7 @@ export default function CoursesPage() {
               <Download size={15} strokeWidth={2} />
               Enquire About Cohorts
             </Link>
-          </div>
+          </Reveal>
         </div>
       </section>
     </main>

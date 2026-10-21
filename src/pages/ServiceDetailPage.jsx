@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ChevronDown, Check, PhoneCall } from 'lucide-react';
-import { useInView } from '../hooks/useInView';
+import { Reveal } from '../components/Reveal';
 import NotFound from './NotFound';
 import { servicesData, serviceList } from '../data/servicesData';
 
@@ -74,11 +74,6 @@ export default function ServiceDetailPage() {
   const [currency, setCurrency] = useState('NGN');
   const [openFaq, setOpenFaq] = useState(-1);
 
-  const heroRef = useInView(0.1);
-  const plansRef = useInView(0.05);
-  const faqRef = useInView(0.05);
-  const ctaRef = useInView(0.1);
-
   // An unknown slug renders the 404 rather than silently falling back to
   // web-development, which used to hand users a valid-looking page for a URL
   // that does not exist. Every hook above has already run, so the early return
@@ -96,7 +91,7 @@ export default function ServiceDetailPage() {
         />
 
         <div className="shell">
-          <div ref={heroRef.ref} className="reveal mx-auto max-w-[740px]">
+          <Reveal threshold={0.1} className="mx-auto max-w-[740px]">
             {/* Category Pill Tag */}
             <span className="mb-4 inline-block rounded-full border border-line bg-surface-2 px-4 py-1.5 text-xs font-semibold text-body shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               {service.tag}
@@ -131,14 +126,14 @@ export default function ServiceDetailPage() {
                 );
               })}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Pricing Packages ── */}
       <section className="py-14 bg-surface/50 border-t border-line-soft">
         <div className="shell">
-          <div ref={plansRef.ref} className="reveal">
+          <Reveal threshold={0.05}>
             <h2 className="mb-6 text-center font-display text-[1.4rem] font-bold text-ink">
               {service.packagesTitle}
             </h2>
@@ -168,14 +163,14 @@ export default function ServiceDetailPage() {
                 <PlanCard key={plan.name} plan={plan} currency={currency} />
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── FAQ Section ── */}
       <section className="py-20 bg-white">
         <div className="shell">
-          <div ref={faqRef.ref} className="reveal">
+          <Reveal threshold={0.05}>
             <h2 className="mb-10 text-center font-display text-[1.45rem] font-bold text-ink">
               {service.faqTitle}
             </h2>
@@ -215,14 +210,14 @@ export default function ServiceDetailPage() {
                 </div>
               ))}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Bottom Call To Action Banner ── */}
       <section className="pb-24 pt-6 bg-white">
         <div className="shell">
-          <div ref={ctaRef.ref} className="reveal">
+          <Reveal threshold={0.1}>
             <div className="mx-auto max-w-[760px] rounded-3xl bg-brand-muted/70 px-8 py-12 text-center border border-brand/15 sm:px-12">
               <h2 className="mb-4 font-display text-[clamp(1.3rem,2.8vw,1.75rem)] font-bold text-ink">
                 {service.ctaHeadline}
@@ -238,7 +233,7 @@ export default function ServiceDetailPage() {
                 <span>{service.ctaBtn}</span>
               </Link>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </main>

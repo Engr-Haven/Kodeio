@@ -298,6 +298,29 @@ need a colour, add a token rather than hardcoding it.
 scrolls into view, then disconnects. The transitions themselves are CSS
 (`.reveal`, `.stagger`) in `src/index.css`.
 
+**Use `src/components/Reveal.jsx`, not the raw hook.** `<Reveal>` and
+`<Stagger>` attach the observer ref and the animation class to the same element,
+which is the only way it works:
+
+```jsx
+import { Reveal, Stagger } from '../components/Reveal';
+
+<Reveal threshold={0.05} className="mx-auto max-w-[700px]">
+  ...
+</Reveal>
+
+<Stagger className="grid gap-6 md:grid-cols-2">
+  ...
+</Stagger>
+```
+
+`.stagger` hides its **children** (`opacity: 0`) until the container itself gets
+`reveal-visible`, so a `.stagger` element with no observer ref leaves the whole
+grid permanently invisible — it renders as an empty gap with no console error.
+That shipped once on `/contact` and blanked two entire sections. The components
+make the mistake impossible; if you need the raw hook, attach `ref` to the same
+element that carries `.reveal` or `.stagger`, never to a sibling.
+
 ```js
 const { ref, visible } = useInView(threshold, { repeat, onEnter });
 ```
@@ -363,9 +386,9 @@ not in `public/`.
 4. If it needs a nav entry, add a label/`to` to the `navLinks` array in
    `src/components/Navbar.jsx`. A real page is just its path (`/about`); a home
    page section needs the `/` prefix (`/#faq`).
-5. Reuse `useInView` for reveal and a local `useState` for UI state. Keep static
-   data as a module-level array at the top of the component, matching the other
-   sections.
+5. Use `<Reveal>` / `<Stagger>` from `src/components/Reveal.jsx` for scroll
+   reveal and a local `useState` for UI state. Keep static data as a
+   module-level array at the top of the component, matching the other sections.
 
 ## Known gaps
 

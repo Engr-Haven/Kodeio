@@ -1,17 +1,13 @@
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Clock, Calendar, Video, ChevronUp, ArrowRight } from 'lucide-react';
-import { useInView } from '../hooks/useInView';
+import { Reveal } from '../components/Reveal';
 import NotFound from './NotFound';
 import { coursesData, courseList } from '../data/coursesData';
 
 export default function CourseDetailPage() {
   const { courseId } = useParams();
   const course = courseId ? coursesData[courseId] : null;
-
-  const heroRef = useInView(0.1);
-  const curriculumRef = useInView(0.05);
-  const ctaRef = useInView(0.1);
 
   // Default all curriculum weeks to open, matching Courses-1, 2, 3 mockups
   const [openWeeks, setOpenWeeks] = useState(() => {
@@ -54,7 +50,7 @@ export default function CourseDetailPage() {
         />
 
         <div className="shell">
-          <div ref={heroRef.ref} className="reveal mx-auto max-w-[760px]">
+          <Reveal threshold={0.1} className="mx-auto max-w-[760px]">
             {/* Live Cohort Learning Badge */}
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-line-soft bg-surface-2 px-4 py-1.5 text-xs font-semibold text-body shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
@@ -127,14 +123,14 @@ export default function CourseDetailPage() {
                 );
               })}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Curriculum / Weeks Section ── */}
       <section id="curriculum" className="py-14 bg-surface/40 border-t border-line-soft">
         <div className="shell">
-          <div ref={curriculumRef.ref} className="reveal">
+          <Reveal threshold={0.05}>
             <div className="mb-8 flex flex-col items-center justify-center gap-2 text-center">
               <h2 className="font-display text-[clamp(1.4rem,3vw,1.95rem)] font-bold tracking-[-0.02em] text-ink">
                 {course.curriculumTitle}
@@ -191,14 +187,14 @@ export default function CourseDetailPage() {
                 );
               })}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* ── Bottom Call To Action Banner ── */}
       <section className="py-20 bg-white">
         <div className="shell">
-          <div ref={ctaRef.ref} className="reveal">
+          <Reveal threshold={0.1}>
             <div className="mx-auto max-w-[760px] rounded-3xl bg-brand-muted/70 px-8 py-12 text-center border border-brand/15 sm:px-12">
               <h2 className="mb-4 font-display text-[clamp(1.3rem,2.8vw,1.75rem)] font-bold text-ink">
                 Ready to Accelerate Your Career with Kodeio?
@@ -223,7 +219,7 @@ export default function CourseDetailPage() {
                 </Link>
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </main>

@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Clock, Users, Download } from 'lucide-react';
-import { useInView } from '../hooks/useInView';
+import { Reveal } from './Reveal';
 import { courseList } from '../data/coursesData';
 
 // Card title, duration and description come from coursesData (the single source
@@ -40,14 +40,10 @@ const courses = courseList.map((course) => ({
 }));
 
 export default function Bootcamps() {
-  const head = useInView();
-  const cards = useInView();
-  const bottom = useInView();
-
   return (
     <section id="courses" className="bg-white pt-20 pb-24">
       <div className="shell">
-        <div ref={head.ref} className="reveal mb-14 max-w-[780px]">
+        <Reveal className="mb-14 max-w-[780px]">
           <h2 className="mb-3 font-display text-[clamp(2rem,3.5vw,2.75rem)] font-extrabold tracking-[-0.02em] text-ink">
             Live Tech Bootcamps
           </h2>
@@ -55,12 +51,9 @@ export default function Bootcamps() {
             Courses are designed to help students build real-world projects, gain industry-ready
             skills, grow strong portfolios, and access internship opportunities.
           </p>
-        </div>
+        </Reveal>
 
-        <div
-          ref={cards.ref}
-          className="reveal mb-[5.5rem] grid grid-cols-3 gap-7 max-[900px]:mx-auto max-[900px]:mb-16 max-[900px]:max-w-[500px] max-[900px]:grid-cols-1"
-        >
+        <Reveal className="mb-[5.5rem] grid grid-cols-3 gap-7 max-[900px]:mx-auto max-[900px]:mb-16 max-[900px]:max-w-[500px] max-[900px]:grid-cols-1">
           {courses.map((course) => (
             <div
               key={course.slug}
@@ -121,12 +114,9 @@ export default function Bootcamps() {
               </div>
             </div>
           ))}
-        </div>
+        </Reveal>
 
-        <div
-          ref={bottom.ref}
-          className="reveal mx-auto flex max-w-[680px] flex-col items-center text-center"
-        >
+        <Reveal className="mx-auto flex max-w-[680px] flex-col items-center text-center">
           <h3 className="mb-3 font-display text-[clamp(1.4rem,2.5vw,1.85rem)] font-bold text-ink">
             Start Your Journey Into Tech With Real Guidance
           </h3>
@@ -142,7 +132,7 @@ export default function Bootcamps() {
             <Download size={15} strokeWidth={2} />
             Download Curriculum
           </a>
-        </div>
+        </Reveal>
       </div>
     </section>
   );
