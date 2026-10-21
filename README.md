@@ -114,17 +114,17 @@ fallback; the largest hero image is preloaded from `index.html`.
 
 ## Routes
 
-| Path                   | Renders                                                                  |
-| ---------------------- | ------------------------------------------------------------------------ |
-| `/`                    | `HomePage` — Hero, Services, Bootcamps, Portfolio, FAQ                   |
-| `/about`               | `AboutPage` — **placeholder, content still to be written**               |
-| `/courses`             | `CoursesPage` — course listing from `coursesData`                        |
-| `/courses/:courseId`   | `CourseDetailPage` — hero, curriculum accordion, CTA                     |
-| `/portfolio`           | `PortfolioPage` — **placeholder, content still to be written**           |
-| `/contact`             | `ContactPage` — real contact details, **enquiry form still to be built** |
-| `/services`            | Redirects to `/services/web-development`                                 |
-| `/services/:serviceId` | `ServiceDetailPage` — hero, pricing, FAQ, CTA                            |
-| anything else          | `NotFound`                                                               |
+| Path                   | Renders                                                        |
+| ---------------------- | -------------------------------------------------------------- |
+| `/`                    | `HomePage` — Hero, Services, Bootcamps, Portfolio, FAQ         |
+| `/about`               | `AboutPage` — story, mission & vision, services, tools, FAQ    |
+| `/courses`             | `CoursesPage` — course listing from `coursesData`              |
+| `/courses/:courseId`   | `CourseDetailPage` — hero, curriculum accordion, CTA           |
+| `/portfolio`           | `PortfolioPage` — **placeholder, content still to be written** |
+| `/contact`             | `ContactPage` — enquiry form, contact rail, pricing, CTAs      |
+| `/services`            | Redirects to `/services/web-development`                       |
+| `/services/:serviceId` | `ServiceDetailPage` — hero, pricing, FAQ, CTA                  |
+| anything else          | `NotFound`                                                     |
 
 `serviceId` is a key of `servicesData` and `courseId` is a key of `coursesData`.
 An unknown slug renders the 404 page rather than falling back to a default.
@@ -149,22 +149,27 @@ on `<html>` in `index.css`, which is the opposite of what is wanted there.
 
 ## Placeholder pages
 
-`/about` and `/portfolio` exist as real routes so the navbar and footer links
-resolve to something today instead of being dead anchors. Each one renders an
-honest "on its way" notice plus links to whatever already works — there is no
-placeholder prose or invented copy. Replace a page's contents when it is ready;
-nothing outside `src/pages/` needs to change.
+`/portfolio` exists as a real route so the navbar and footer links resolve to
+something today instead of being dead anchors. It renders an honest "on its
+way" notice plus links to whatever already works — there is no placeholder prose
+or invented copy. Replace a page's contents when it is ready; nothing outside
+`src/pages/` needs to change.
 
-The two share `src/components/PlaceholderPage.jsx`, which takes `title`, `lede`
+It shares `src/components/PlaceholderPage.jsx`, which takes `title`, `lede`
 and an `actions` array. Add a third by copying one of the pages — it is a few
 lines.
+
+`/about` was a placeholder too and has since been built out: `AboutPage` is a
+full page (story, mission & vision, what we do, tools, FAQ, CTAs) built to the
+same house style as the rest of the site. It is the one route with a palette
+of its own — see the `--color-about-*` tokens below.
 
 `/courses` was a placeholder too and has since been built out: `CoursesPage`
 lists the tracks from `coursesData` and `CourseDetailPage` renders each one.
 
 `/contact` is more than a stub: it shows the email, phone numbers and socials
 from `src/data/site.js`, which the footer also reads, so the two cannot drift
-apart. Only the enquiry form is missing.
+apart, and it carries the enquiry form described below.
 
 `/#faq` is the one remaining home-section link in the nav or footer. It needs the
 leading `/` because the footer renders on every route and that id only exists on
@@ -201,6 +206,29 @@ tab" work.
 `Layout` uses `getElementById(hash.slice(1))`, not `querySelector` — a hash is
 arbitrary user input and anything that is not a valid CSS selector would throw.
 
+## Enquiry form
+
+`/contact` carries a real enquiry form. There is **no backend yet**, so
+`handleSubmit` in `src/pages/ContactPage.jsx` has two paths:
+
+1. **`VITE_CONTACT_ENDPOINT` is set** — the form POSTs the payload as JSON
+   (`{ name, email, company, phone, subject, budget, timeline, message, updates }`)
+   to that URL. A non-2xx response surfaces as an error message.
+2. **`VITE_CONTACT_ENDPOINT` is empty** — the message is handed to the visitor's
+   own mail app through a `mailto:` link, pre-filled with the field values.
+
+The fallback exists so a submission is never silently dropped while the backend
+is being built. The status message says so honestly rather than claiming the
+enquiry was received.
+
+To switch over, set the variable in `.env` (see `.env.example`) and rebuild —
+Vite inlines `import.meta.env` at build time, so the endpoint has to be present
+when the site is built, not when it is served.
+
+The "What do you need?" dropdown is generated from `serviceList` and
+`courseList`, so the form can never offer a service or bootcamp that does not
+exist. Budget bands follow the real starting prices in `servicesData`.
+
 ## Content: `src/data/`
 
 Three data modules are the source of truth for page content:
@@ -236,6 +264,14 @@ need a colour, add a token rather than hardcoding it.
 
 - **Colours** — `brand` purple `#7d2eff`, plus `ink`, `body`, `muted`, `line`
   neutrals and the `surface-*` scale. Generates `bg-brand`, `text-ink`, etc.
+- **About palette** — a `about-*` set measured pixel-by-pixel from the
+  `AboutUs.png` mockup and used only by `/about`. Still tokens, not hex:
+  `bg-about-mission`, `bg-about-card-pink-strong`, `text-about-vision-ink`.
+- **Banner gradient** — `banner-top` / `banner-bottom` drive the closing CTA
+  banner (`bg-gradient-to-b from-banner-top to-banner-bottom`). A lilac-to-grey
+  blend that sits on the page as a colour wash. Shared by `/about` and
+  `/contact`; the old `about-banner-*` pair was promoted out of the about
+  namespace when a second route needed it.
 - **Type** — `--font-display` (Bricolage Grotesque) for headings, `--font-sans`
   (Roboto) for body copy. `h1`–`h6` pick up the display face automatically from
   the base layer, so most headings need no font utility at all.
@@ -304,11 +340,18 @@ src: '/case study img.png'; // 404
 
 Always supply real `width` and `height` to prevent layout shift.
 
+**Tool logos are PNGs.** The stack icons on `/about` (`figma.png`, `css.png`,
+`react.png`, …) are 264×264 transparent squares in `public/`, rendered through
+a `<picture>` with the WebP sibling from `public/optimized/` and the PNG as the
+fallback. `scripts/optimize-images.mjs` picks up any new PNG in `public/`
+automatically — no registration needed.
+
 **Do not put reference material in `public/`.** Everything there is copied
 verbatim into `dist/` and deployed. The `services-1..4.png` design captures
 belong next to `DESIGN-MEASUREMENTS.md` in the repo root, not in the app; when
 they were in `public/` they added 3.1 MB to every deploy while nothing referenced
-them.
+them. The same applies to the `AboutUs.png` mockup — it lives in the repo root,
+not in `public/`.
 
 ## Adding a section
 
@@ -333,9 +376,11 @@ them.
 - No Privacy Policy or Terms of Service. The footer links were removed rather
   than left pointing at `#privacy` / `#terms`, which resolved to nothing. Add
   them as real routes when the documents exist.
-- `/about` and `/portfolio` are placeholders — the real pages are still to be
-  written. See "Placeholder pages" above.
-- `/contact` has no enquiry form yet; it only lists contact details.
+- `/portfolio` is still a placeholder — the real page is yet to be written. See
+  "Placeholder pages" above.
+- `/contact` has a full enquiry form, but **no backend yet** — it falls back to
+  a `mailto:` link until `VITE_CONTACT_ENDPOINT` is set. See "Enquiry form"
+  below.
 - `LogoKodeio.svg` is unreferenced.
 - Bricolage Grotesque tops out at weight 800, so `font-black` (900) in the
   footer wordmark renders as 800.
@@ -344,9 +389,9 @@ them.
   ~360 KB, but the untouched PNG fallbacks are still shipped for old browsers.
 - SEO structure is in place (prerendered HTML, per-route title/description/
   canonical, Open Graph/Twitter, sitemap, robots, JSON-LD). What still limits
-  ranking is **content**, not plumbing: `/about` and `/portfolio` are
-  placeholders, the four Portfolio cards are identical, and the FAQ/service copy
-  is thin. Enrich those before expecting competitive positions.
+  ranking is **content**, not plumbing: `/portfolio` is a placeholder, the four
+  Portfolio cards are identical, and the FAQ/service copy is thin. Enrich those
+  before expecting competitive positions.
 
 ## Code style
 

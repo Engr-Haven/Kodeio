@@ -43,6 +43,6 @@ export const staticPages = [
     path: '/contact',
     title: 'Contact Kodeio — Start a Project',
     description:
-      'Tell Kodeio what you want to achieve. Book a call, request a quote or discuss a partnership — we usually respond within 24 hours.',
+      'Send Kodeio your project brief through the enquiry form, or reach us directly by phone or email. We reply to every enquiry within 8 working hours.',
   },
 ];

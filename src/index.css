@@ -41,6 +41,40 @@
   --color-accent-orange-line: #ffedd5;
   --color-accent-orange-edge: #fed7aa;
 
+  /* About page palette — sampled pixel-by-pixel from the AboutUs.png mockup
+     (2400×8249 export, 1.5× a 1440px canvas). These tints only exist on the
+     About route, but they are measured values rather than eyeballed ones, so
+     they live here with the rest of the scale instead of as hex in the page. */
+  --color-about-panel: #f5f5f5;
+  --color-about-pill: #f5eafb;
+  --color-about-green: #1bb15c;
+  --color-about-mission: #f4f3fa;
+  --color-about-vision: #edf6fd;
+  --color-about-icon-lilac: #f0e6ff;
+  --color-about-icon-blue: #bedff8;
+  /* Ink for the vision glyph — readable on --color-about-icon-blue, unlike
+     the icon background itself. */
+  --color-about-vision-ink: #0a69c9;
+  --color-about-card-pink: #f2b2d7;
+  --color-about-card-pink-strong: #f5c1df;
+  --color-about-card-blue: #94cef9;
+  --color-about-card-blue-strong: #a9d8fa;
+  --color-about-card-amber: #ffbc01;
+  --color-about-card-amber-strong: #ffc934;
+  --color-about-card-peach: #fae5d0;
+  --color-about-card-peach-strong: #fbead9;
+  --color-about-banner-top: #dbc7fc;
+  --color-about-banner-bottom: #f4f3f5;
+
+  /* Closing CTA banner gradient — shared by /about and /contact. The lilac is
+     the brand purple washed out to a tint, so the banner reads as a colour
+     blend sitting on the page rather than a solid block of brand colour.
+     Values are the same measured pair the About mockup used, promoted out of
+     the about-* namespace once a second route needed them. */
+  --color-banner-top: #dbc7fc;
+  --color-banner-bottom: #f4f3f5;
+  --color-about-button-muted: #ebebeb;
+
   /* Typography */
   --font-sans: 'Roboto', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Bricolage Grotesque', 'Roboto', ui-sans-serif, system-ui, sans-serif;
@@ -81,6 +115,22 @@
      edge. `backwards` holds the 0% frame during any delay; the element is
      remounted (keyed) each tick, which restarts this animation. */
   --animate-word-flip: word-flip 0.5s cubic-bezier(0.34, 1.4, 0.64, 1) backwards;
+
+  /* Tool strip on /about: the logo row scrolls continuously to the left. The
+     track holds the list twice and translates by -50%, which is exactly one
+     list width, so the loop wraps without a visible seam. */
+  --animate-tools-marquee: tools-marquee 28s linear infinite;
+
+  /* Continuous leftward scroll for the tool strip. */
+  @keyframes tools-marquee {
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
 
   @keyframes fade-in {
     from {
@@ -347,6 +397,22 @@
     transform: none;
     transition-delay: 0.6s;
   }
+
+  /* Tool strip on /about: a row of logos that scrolls continuously to the
+     left. The edges are masked so a logo fades out at the edge of the card
+     instead of being sliced off. The track inside is `w-max` and holds the
+     list twice, so the -50% translate lands on the seam. */
+  .tools-marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0,
+      #000 6%,
+      #000 94%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+  }
 }
 
 /* ========================================
@@ -366,6 +432,19 @@
        and shows the static word immediately. */
     [class*='animate-word-flip'] {
       animation: none !important;
+    }
+
+    /* The tool strip scrolls forever, so it joins the float and the headline
+       word as motion to cut. With the animation gone the strip would sit
+       still and be clipped mid-row, so it becomes a plain horizontally
+       scrollable row instead — the logos are still all reachable. */
+    [class*='animate-tools-marquee'] {
+      animation: none !important;
+    }
+
+    .tools-marquee {
+      overflow-x: auto;
+      overflow-y: hidden;
     }
 
     /* Scroll reveals still fire, but as an instant change of opacity with no

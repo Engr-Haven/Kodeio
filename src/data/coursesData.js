@@ -4,9 +4,6 @@
  * Single source of truth for all Kodeio bootcamp/course detail pages.
  * Each entry maps directly to a /courses/:courseId route rendered by
  * CourseDetailPage.jsx.
- *
- * Data is extracted faithfully from Courses-1.png, Courses-2.png, and
- * Courses-3.png design mockups.
  */
 
 const coursesData = {
@@ -18,7 +15,7 @@ const coursesData = {
     headline: 'Product (UI/UX) Design',
     sub: 'Learn UI/UX design through live mentorship, practical projects, portfolio reviews, and collaborative learning. Build industry-ready skills while working on real product challenges used by modern startups and businesses.',
     duration: '8 Weeks',
-    startDate: 'Starts 22nd of Aug 2026',
+    startDate: 'TBA',
     mode: 'Live on Google Meet',
     curriculumTitle: "What you'll be able to do after this Bootcamp",
     curriculum: [
@@ -73,7 +70,7 @@ const coursesData = {
     headline: 'WordPress Website Design & Development',
     sub: 'Learn WordPress website design and development from beginner to advanced. Build responsive websites, set up domains and hosting, optimize performance, and launch professional websites for businesses, personal brands, and clients.',
     duration: '6 Weeks',
-    startDate: 'Starts 22nd of Aug 2026',
+    startDate: 'TBA',
     mode: 'Live on Google Meet',
     curriculumTitle: "What you'll be able to do after this Bootcamp",
     curriculum: [
@@ -118,7 +115,7 @@ const coursesData = {
     headline: 'Frontend Development',
     sub: 'Learn frontend development through live mentorship, practical projects, and collaborative learning. Build industry-ready skills in HTML, CSS, JavaScript, and React while shipping real, responsive websites.',
     duration: '12 Weeks',
-    startDate: 'Starts 22nd of Aug 2026',
+    startDate: 'TBA',
     mode: 'Live on Google Meet',
     curriculumTitle: "What you'll be able to do after this Bootcamp",
     curriculum: [
