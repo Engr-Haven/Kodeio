@@ -252,7 +252,8 @@ export default function Navbar() {
                  carries a hash and will never equal a bare pathname. */
               className={`${linkClass} ${
                 location.pathname === link.to ||
-                (link.to === '/courses' && location.pathname.startsWith('/courses'))
+                (link.to === '/courses' && location.pathname.startsWith('/courses')) ||
+                (link.to === '/portfolio' && location.pathname.startsWith('/portfolio'))
                   ? 'text-brand bg-brand-muted font-semibold'
                   : ''
               }`}
@@ -363,7 +364,8 @@ export default function Navbar() {
             onClick={() => setMenuOpen(false)}
             className={`block rounded-chip px-3 py-2 text-[0.92rem] font-medium transition-all duration-200 ${
               location.pathname === link.to ||
-              (link.to === '/courses' && location.pathname.startsWith('/courses'))
+              (link.to === '/courses' && location.pathname.startsWith('/courses')) ||
+              (link.to === '/portfolio' && location.pathname.startsWith('/portfolio'))
                 ? 'bg-brand-muted text-brand font-semibold'
                 : 'text-gray-700 hover:bg-brand-muted hover:text-brand'
             }`}

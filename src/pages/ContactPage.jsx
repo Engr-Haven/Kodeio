@@ -102,7 +102,7 @@ const BRIEF_HINTS = [
    service. No invented numbers, and a service added to the data shows up here
    automatically. The "from " prefix is dropped because the section heading
    already says these are starting prices. */
-const STARTING_PRICES = serviceList.map((service) => {
+const _STARTING_PRICES = serviceList.map((service) => {
   const entry = service.plans[0].priceNGN;
   return {
     id: service.id,
@@ -351,7 +351,7 @@ export default function ContactPage() {
                     name="name"
                     type="text"
                     autoComplete="name"
-                    placeholder="Ada Lovelace"
+                    placeholder="Oluwapelumi Hassan"
                     aria-invalid={Boolean(errors.name)}
                     aria-describedby={errors.name ? 'contact-name-error' : undefined}
                     className={CONTROL}
@@ -364,7 +364,7 @@ export default function ContactPage() {
                     name="email"
                     type="email"
                     autoComplete="email"
-                    placeholder="you@company.com"
+                    placeholder="pelusan@gmail.com"
                     aria-invalid={Boolean(errors.email)}
                     aria-describedby={errors.email ? 'contact-email-error' : undefined}
                     className={CONTROL}
@@ -637,7 +637,7 @@ export default function ContactPage() {
       </section>
 
       {/* ── Starting prices ── */}
-      <section id="pricing" className="bg-white py-20">
+      {/* <section id="pricing" className="bg-white py-20">
         <div className="shell">
           <Reveal threshold={0.05} className="mx-auto mb-10 max-w-[700px] text-center">
             <h2 className="mb-3 font-display text-[clamp(1.7rem,3.2vw,2.4rem)] font-extrabold leading-[1.15] tracking-[-0.02em] text-ink">
@@ -674,7 +674,7 @@ export default function ContactPage() {
             </p>
           </Reveal>
         </div>
-      </section>
+      </section> */}
 
       {/* ── Two audiences ── */}
       <section className="border-t border-line-soft bg-surface/40 py-20">

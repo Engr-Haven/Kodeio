@@ -166,7 +166,7 @@ export default function Hero() {
               Request Free Audit
             </a>
             <a
-              href="#courses"
+              href="/courses"
               id="hero-cta-bootcamp"
               className="inline-block rounded-full border-[1.5px] border-[#9657ff] bg-white px-7 py-[0.72rem] text-[0.9375rem] font-semibold text-brand transition-all duration-200 hover:-translate-y-px hover:border-brand hover:bg-brand-tint"
             >

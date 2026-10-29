@@ -15,6 +15,7 @@ import CourseDetailPage from './pages/CourseDetailPage';
 import AboutPage from './pages/AboutPage';
 import CoursesPage from './pages/CoursesPage';
 import PortfolioPage from './pages/PortfolioPage';
+import CaseStudyPage from './pages/CaseStudyPage';
 import ContactPage from './pages/ContactPage';
 import NotFound from './pages/NotFound';
 
@@ -98,6 +99,7 @@ export function AppRoutes() {
           return <Route key={path} path={path} element={<Page />} />;
         })}
         <Route path="/courses/:courseId" element={<CourseDetailPage />} />
+        <Route path="/portfolio/:projectId" element={<CaseStudyPage />} />
         <Route path="/services" element={<Navigate to="/services/web-development" replace />} />
         <Route path="/services/:serviceId" element={<ServiceDetailPage />} />
         <Route path="*" element={<NotFound />} />

@@ -15,6 +15,7 @@
 import { CONTACT, SOCIALS } from '../data/site';
 import { servicesData } from '../data/servicesData';
 import { coursesData } from '../data/coursesData';
+import { portfolioData } from '../data/portfolioData';
 import { homeFaqs } from '../data/faqsData';
 import { staticPages } from './pages';
 import { SITE_URL } from './siteUrl';
@@ -119,6 +120,18 @@ function courseJsonLd(course, siteUrl, path) {
   };
 }
 
+function portfolioJsonLd(project, siteUrl, path) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    name: project.title,
+    description: project.summary,
+    url: `${siteUrl}${path}`,
+    creator: { '@type': 'Organization', name: 'Kodeio Technologies', url: siteUrl },
+    keywords: [...project.tags, ...project.overview.tags].join(', '),
+  };
+}
+
 /* Accepts both shapes used in the codebase: { q, a } and { question, answer }. */
 function faqJsonLd(faqs) {
   return {
@@ -158,6 +171,7 @@ export function getSeo(pathname, { siteUrl = SITE_URL } = {}) {
 
   const serviceMatch = path.match(/^\/services\/([^/]+)$/);
   const courseMatch = path.match(/^\/courses\/([^/]+)$/);
+  const portfolioMatch = path.match(/^\/portfolio\/([^/]+)$/);
 
   if (serviceMatch) {
     const service = servicesData[serviceMatch[1]];
@@ -182,6 +196,17 @@ export function getSeo(pathname, { siteUrl = SITE_URL } = {}) {
       title: `${course.title} Bootcamp | Kodeio Technologies`,
       description: truncate(course.sub),
       jsonLd: [organizationJsonLd(siteUrl), courseJsonLd(course, siteUrl, path)],
+    };
+  }
+
+  if (portfolioMatch) {
+    const project = portfolioData[portfolioMatch[1]];
+    if (!project) return { ...NOT_FOUND, canonical, image };
+    return {
+      ...base,
+      title: `${project.title} — Case Study | Kodeio`,
+      description: truncate(project.summary),
+      jsonLd: [organizationJsonLd(siteUrl), portfolioJsonLd(project, siteUrl, path)],
     };
   }
 

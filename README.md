@@ -109,25 +109,28 @@ course at the host level, so they never render a duplicate page.
 
 **Images:** `scripts/optimize-images.mjs` (the `prebuild` step, needs `sharp`)
 emits WebP siblings into `public/optimized/` and a 1200×630 `og-default.png`.
-`Hero` and `Portfolio` reference them through `<picture>` with the PNG as
-fallback; the largest hero image is preloaded from `index.html`.
+`Hero` and the portfolio components (`ProjectImage`) reference them through
+`<picture>` with the PNG as fallback; the largest hero image is preloaded from
+`index.html`.
 
 ## Routes
 
-| Path                   | Renders                                                        |
-| ---------------------- | -------------------------------------------------------------- |
-| `/`                    | `HomePage` — Hero, Services, Bootcamps, Portfolio, FAQ         |
-| `/about`               | `AboutPage` — story, mission & vision, services, tools, FAQ    |
-| `/courses`             | `CoursesPage` — course listing from `coursesData`              |
-| `/courses/:courseId`   | `CourseDetailPage` — hero, curriculum accordion, CTA           |
-| `/portfolio`           | `PortfolioPage` — **placeholder, content still to be written** |
-| `/contact`             | `ContactPage` — enquiry form, contact rail, pricing, CTAs      |
-| `/services`            | Redirects to `/services/web-development`                       |
-| `/services/:serviceId` | `ServiceDetailPage` — hero, pricing, FAQ, CTA                  |
-| anything else          | `NotFound`                                                     |
+| Path                    | Renders                                                     |
+| ----------------------- | ----------------------------------------------------------- |
+| `/`                     | `HomePage` — Hero, Services, Bootcamps, Portfolio, FAQ      |
+| `/about`                | `AboutPage` — story, mission & vision, services, tools, FAQ |
+| `/courses`              | `CoursesPage` — course listing from `coursesData`           |
+| `/courses/:courseId`    | `CourseDetailPage` — hero, curriculum accordion, CTA        |
+| `/portfolio`            | `PortfolioPage` — hero and selected-work grid               |
+| `/portfolio/:projectId` | `CaseStudyPage` — overview, process, outcomes, next project |
+| `/contact`              | `ContactPage` — enquiry form, contact rail, CTAs            |
+| `/services`             | Redirects to `/services/web-development`                    |
+| `/services/:serviceId`  | `ServiceDetailPage` — hero, pricing, FAQ, CTA               |
+| anything else           | `NotFound`                                                  |
 
-`serviceId` is a key of `servicesData` and `courseId` is a key of `coursesData`.
-An unknown slug renders the 404 page rather than falling back to a default.
+`serviceId` is a key of `servicesData`, `courseId` is a key of `coursesData`, and
+`projectId` is a key of `portfolioData`. An unknown slug renders the 404 page
+rather than falling back to a default.
 
 ## Chrome
 
@@ -147,25 +150,21 @@ contrast-safe choice. It also respects `prefers-reduced-motion` by scrolling wit
 `behavior: 'instant'` — `'auto'` would inherit the `scroll-behavior: smooth` set
 on `<html>` in `index.css`, which is the opposite of what is wanted there.
 
-## Placeholder pages
+## Built-out pages
 
-`/portfolio` exists as a real route so the navbar and footer links resolve to
-something today instead of being dead anchors. It renders an honest "on its
-way" notice plus links to whatever already works — there is no placeholder prose
-or invented copy. Replace a page's contents when it is ready; nothing outside
-`src/pages/` needs to change.
+There are no placeholder routes left. `/portfolio` now renders a hero and a
+responsive selected-work grid from `src/data/portfolioData.js`; each tile links
+to a `/portfolio/:projectId` case study using the same shared template.
 
-It shares `src/components/PlaceholderPage.jsx`, which takes `title`, `lede`
-and an `actions` array. Add a third by copying one of the pages — it is a few
-lines.
+`/about` is a full page (story, mission & vision, what we do, tools, FAQ, CTAs)
+built to the same house style as the rest of the site. It is the one route with
+a palette of its own — see the `--color-about-*` tokens below.
 
-`/about` was a placeholder too and has since been built out: `AboutPage` is a
-full page (story, mission & vision, what we do, tools, FAQ, CTAs) built to the
-same house style as the rest of the site. It is the one route with a palette
-of its own — see the `--color-about-*` tokens below.
+`/courses` lists the tracks from `coursesData` and `CourseDetailPage` renders
+each one.
 
-`/courses` was a placeholder too and has since been built out: `CoursesPage`
-lists the tracks from `coursesData` and `CourseDetailPage` renders each one.
+`src/components/PlaceholderPage.jsx` is no longer referenced by any route but is
+kept for future use.
 
 `/contact` is more than a stub: it shows the email, phone numbers and socials
 from `src/data/site.js`, which the footer also reads, so the two cannot drift
@@ -394,13 +393,12 @@ not in `public/`.
 
 - **No test runner.** CI (`.github/workflows/ci.yml`) runs lint, format check,
   and build, but there is no functional test coverage.
-- All four Portfolio entries are identical placeholder copy ("FastAI - AI Design
-  website"), and all four point at the same image.
+- Portfolio case-study copy and metrics are drawn from the FastAI template and
+  the live project sites; confirm client-approved wording and numbers before
+  publishing.
 - No Privacy Policy or Terms of Service. The footer links were removed rather
   than left pointing at `#privacy` / `#terms`, which resolved to nothing. Add
   them as real routes when the documents exist.
-- `/portfolio` is still a placeholder — the real page is yet to be written. See
-  "Placeholder pages" above.
 - `/contact` has a full enquiry form, but **no backend yet** — it falls back to
   a `mailto:` link until `VITE_CONTACT_ENDPOINT` is set. See "Enquiry form"
   below.
@@ -412,9 +410,9 @@ not in `public/`.
   ~360 KB, but the untouched PNG fallbacks are still shipped for old browsers.
 - SEO structure is in place (prerendered HTML, per-route title/description/
   canonical, Open Graph/Twitter, sitemap, robots, JSON-LD). What still limits
-  ranking is **content**, not plumbing: `/portfolio` is a placeholder, the four
-  Portfolio cards are identical, and the FAQ/service copy is thin. Enrich those
-  before expecting competitive positions.
+  ranking is **content**, not plumbing: the FAQ/service copy is thin and the
+  case-study metrics still need client verification. Enrich those before
+  expecting competitive positions.
 
 ## Code style
 

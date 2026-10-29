@@ -13,14 +13,16 @@
 import { staticPages } from './pages.js';
 import { serviceList } from '../data/servicesData.js';
 import { courseList } from '../data/coursesData.js';
+import { portfolioList } from '../data/portfolioData.js';
 
 /* Pages with no dynamic segment — declared once in src/seo/pages.js. */
 export const staticRoutes = staticPages.map((page) => page.path);
 
-/* Crawlable dynamic paths, one per service and per course. */
+/* Crawlable dynamic paths, one per service, course and case study. */
 export const detailRoutes = [
   ...serviceList.map((service) => `/services/${service.slug}`),
   ...courseList.map((course) => `/courses/${course.slug}`),
+  ...portfolioList.map((project) => `/portfolio/${project.slug}`),
 ];
 
 /* Everything that should exist as a prerendered file and appear in the sitemap. */

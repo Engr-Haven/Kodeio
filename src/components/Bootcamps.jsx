@@ -12,21 +12,21 @@ const CARD_EXTRAS = {
     status: 'Live Tech Bootcamps',
     statusType: 'active',
     slots: '30 slots',
-    price: '₦20,000',
+    price: '₦70,000',
     btnVariant: 'primary',
   },
   'wordpress-website-design': {
     status: 'Coming soon',
     statusType: 'upcoming',
     slots: '30 slots',
-    price: '₦20,000',
+    price: '₦70,000',
     btnVariant: 'neutral',
   },
   'frontend-development': {
     status: 'Live Tech Bootcamps',
     statusType: 'active',
     slots: '30 slots',
-    price: '₦20,000',
+    price: '₦70,000',
     btnVariant: 'primary',
   },
 };
@@ -102,7 +102,7 @@ export default function Bootcamps() {
                   {course.price}
                 </span>
                 <a
-                  href="#contact"
+                  href="/courses"
                   className={`inline-flex min-h-11 items-center justify-center rounded-lg px-5 py-[0.55rem] text-[0.8125rem] font-semibold transition-all duration-200 ${
                     course.btnVariant === 'primary'
                       ? 'bg-brand text-white hover:bg-brand-dark'
@@ -125,7 +125,7 @@ export default function Bootcamps() {
             practical skills through structured live cohort training.
           </p>
           <a
-            href="#contact"
+            href="/courses"
             id="btn-download-curriculum"
             className="inline-flex items-center gap-2 rounded-full border-[1.5px] border-[#9657ff] bg-white px-7 py-[0.7rem] text-sm font-semibold text-brand transition-all duration-200 hover:-translate-y-px hover:border-brand hover:bg-brand-tint"
           >

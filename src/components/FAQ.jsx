@@ -94,7 +94,7 @@ export default function FAQ() {
 
         <div className="flex justify-center">
           <a
-            href="#contact"
+            href="/contact"
             id="btn-faq-start-project"
             className="inline-flex min-h-11 items-center gap-1.5 rounded-lg bg-brand px-[1.6rem] py-[0.65rem] text-sm font-semibold text-white transition-all duration-200 hover:-translate-y-px hover:bg-brand-dark"
           >
